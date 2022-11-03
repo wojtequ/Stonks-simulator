@@ -6,6 +6,9 @@ const app =express()
 const User = require('./models/user')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const loginRegExp = /.{5,}/;
+const passwordRegExp =
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
 
 app.use(express.json());
 app.use(cors());
@@ -24,35 +27,50 @@ async function connect(){
 connect()
 
 
+
 app.post('/api/register', async (req,res)=>{
 
     try{
         const newPassword = await bcrypt.hash(req.body.password, 10)
-        await User.create({
-            email: req.body.email,
-            password: newPassword
-        })
-        res.json({status: 'ok'})
+        const isUserNameValid = await loginRegExp.test(req.body.userName);
+        const isPasswordValid = await passwordRegExp.test(req.body.password);
+        if(isPasswordValid&& isUserNameValid){
+            await User.create({    
+                userName: req.body.userName,
+                password: newPassword
+            })
+            res.json({status: 'ok'})
+    
+        }
+        else
+        {
+
+            res.json({status:'error',error:"wrong username or password"})
+        }
 
     }catch(error){
-        res.json({status: 'error'})
+        console.log(error)
+        res.json({status: 'error', error:"user already exists"})
     }
 })
 
 app.post('/api/login', async (req,res)=>{
     const user = await User.findOne({
-        email:req.body.email,
+        userName:req.body.userName,
     })
+    if(!user) {return {status:'error', error:"user not found"}}
+    
     const isPasswordValid = await bcrypt.compare(req.body.password,user.password);
+    
     if(isPasswordValid){
         const token = jwt.sign({
-            email:user.email
-        },process.env.jwtkey)
+        userName:user.userName
+        },process.env.jwtkey, )
 
-        return res.json({status: "ok", user:token})
+        return res.json({status: "ok", token:token})
     }
     else{
-        return res.json({status: "error", user:false})
+        return res.json({status: "error", error:"wrong login or password"})
     }
 })
 
