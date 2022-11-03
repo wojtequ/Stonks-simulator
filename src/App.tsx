@@ -1,10 +1,28 @@
 import React, {Fragment, useState} from "react";
-import {Button, ChakraProvider, Center, Text, VStack, Highlight, Image, Box, ButtonGroup} from "@chakra-ui/react";
+import {Link, Route, Routes} from "react-router-dom";
+import {
+    Button,
+    Center,
+    Text,
+    VStack,
+    Highlight,
+    Image,
+    Box,
+    ButtonGroup,
+    useColorMode, Switch
+} from "@chakra-ui/react";
+import {debounce} from 'lodash'
 import "./App.css";
 import {RegisterModal} from "./components/RegisterModal";
 import {LoginModal} from "./components/LoginModal";
+import {HomePage} from "./components/HomePage";
 
 function App() {
+    const { colorMode, toggleColorMode } = useColorMode()
+    const handleColorModeChange = debounce(()=>
+            toggleColorMode()
+        ,100);
+
     const [isRegisterModalOpened, setIsRegisterModalOpened] =
         useState<boolean>(false);
 
@@ -19,9 +37,9 @@ function App() {
         setIsLoginModalOpened(false);
     }
 
-
     return (
-        <ChakraProvider>
+        <Fragment>
+            <Switch onChange={handleColorModeChange}> {colorMode === 'light' ? 'Dark' : 'Light'} mode</Switch>
             <Center mt={10}>
                 <VStack>
                     <Text fontSize='4xl' fontWeight='bold' color='green'>
@@ -61,7 +79,12 @@ function App() {
                     </VStack>
 
             </Center>
-        </ChakraProvider>
+            <Link to="/homepage">test</Link>
+
+            <Routes>
+                <Route path="/homepage" element={<HomePage/>}/>
+            </Routes>
+            </Fragment>
     );
 }
 
