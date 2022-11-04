@@ -29,11 +29,10 @@ connect()
 
 
 app.post('/api/register', async (req,res)=>{
-
     try{
-        const newPassword = await bcrypt.hash(req.body.password, 10)
         const isUserNameValid = await loginRegExp.test(req.body.userName);
         const isPasswordValid = await passwordRegExp.test(req.body.password);
+        const newPassword = await bcrypt.hash(req.body.password, 10)
         if(isPasswordValid&& isUserNameValid){
             await User.create({    
                 userName: req.body.userName,
@@ -42,12 +41,12 @@ app.post('/api/register', async (req,res)=>{
             res.json({status: 'ok'})
     
         }
-        else
-        {
-
-            res.json({status:'error',error:"wrong username or password"})
+        if(!isUserNameValid){
+            res.json({status:'error',error:"wrong username"})
         }
-
+        else{
+            res.json({status:'error',error:"wrong password"})
+        }
     }catch(error){
         console.log(error)
         res.json({status: 'error', error:"user already exists"})
@@ -58,7 +57,7 @@ app.post('/api/login', async (req,res)=>{
     const user = await User.findOne({
         userName:req.body.userName,
     })
-    if(!user) {return {status:'error', error:"user not found"}}
+    if(!user) {return res.json({status:'error', error:"user not found"})}
     
     const isPasswordValid = await bcrypt.compare(req.body.password,user.password);
     
@@ -70,7 +69,7 @@ app.post('/api/login', async (req,res)=>{
         return res.json({status: "ok", token:token})
     }
     else{
-        return res.json({status: "error", error:"wrong login or password"})
+        return res.json({status: "error", error:"wrong password"})
     }
 })
 
