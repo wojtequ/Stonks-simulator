@@ -34,17 +34,20 @@ app.post('/api/register', async (req,res)=>{
         const isPasswordValid = await passwordRegExp.test(req.body.password);
         const newPassword = await bcrypt.hash(req.body.password, 10)
         if(isPasswordValid&& isUserNameValid){
-            await User.create({    
+            const user =await User.create({    
                 userName: req.body.userName,
                 password: newPassword
             })
-            res.json({status: 'ok'})
+            const token = jwt.sign({
+                userName:user.userName
+                },process.env.jwtkey, )
+            res.json({status: 'ok', token:token})
     
         }
         if(!isUserNameValid){
             res.json({status:'error',error:"wrong username"})
         }
-        else{
+        if(!isPasswordValid){
             res.json({status:'error',error:"wrong password"})
         }
     }catch(error){
