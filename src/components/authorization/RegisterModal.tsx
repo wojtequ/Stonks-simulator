@@ -116,8 +116,8 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         handleClose();
       })
       .catch((response) => {
-        response.json().then((json: any) => {
-          if (json.error === "user already exists") {
+        response.json().then((json: { message: string }) => {
+          if (json.message === "user already exists") {
             setUserNameError(true);
             toast({
               title: "User already exists",

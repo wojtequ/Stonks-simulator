@@ -43,14 +43,14 @@ app.post("/api/register", async (req, res) => {
       res.json({ status: "ok", token: token });
     }
     if (!isUserNameValid) {
-      res.status(400).json({ status: "error", error: "wrong username" });
+      res.status(400).json({ message: "wrong username" });
     }
     if (!isPasswordValid) {
-      res.status(400).json({ status: "error", error: "wrong password" });
+      res.status(400).json({ message: "wrong password" });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).json({ status: "error", error: "user already exists" });
+    res.status(400).json({ message: "user already exists" });
   }
 });
 
