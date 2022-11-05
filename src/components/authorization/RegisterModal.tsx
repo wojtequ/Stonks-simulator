@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import { InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   Button,
   FormControl,
@@ -16,10 +16,12 @@ import {
   ModalOverlay,
   Tooltip,
   UnorderedList,
+  useToast,
 } from "@chakra-ui/react";
-import { InfoOutlineIcon } from "@chakra-ui/icons";
 import { debounce } from "lodash";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { DEBOUNCE_TIMEOUT } from "./constants";
+import { setJwtToken } from "./utils";
 
 type RegisterModalProps = {
   isOpen: boolean;
@@ -36,6 +38,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
   const passwordRegExp =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
 
+  const toast = useToast();
   const passwordRulesList = useMemo(
     () => (
       <Fragment>
@@ -88,9 +91,43 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
       !isPasswordValid(password) && setPasswordError(true);
       return;
     }
-    const a = { userName, password };
-    console.log(a);
-    handleClose();
+
+    fetch("http://localhost:3000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userName, password }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject(response);
+      })
+      .then((json) => {
+        setJwtToken(json.token);
+        toast({
+          title: "Registration succesfully",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        handleClose();
+      })
+      .catch((response) => {
+        response.json().then((json: any) => {
+          if (json.error === "user already exists") {
+            setUserNameError(true);
+            toast({
+              title: "User already exists",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
+          }
+        });
+      });
   };
 
   const handleClose = () => {
