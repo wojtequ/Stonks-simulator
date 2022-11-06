@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import { HomePage } from "./components/HomePage";
+import { LandingPage } from "./components/LandingPage";
+import { DarkModeToggle } from "./components/DarkModeToggle";
+import { getJwtToken, removeJwtToken } from "./components/authorization/utils";
+import { Button } from "@chakra-ui/react";
 
 function App() {
+  const user = getJwtToken();
+
+  let routes;
+  if (user) {
+    routes = (
+      <Routes>
+        <Route path="/homepage" element={<HomePage />} />
+        <Route path="*" element={<Navigate to="/homepage" />} />
+      </Routes>
+    );
+  } else {
+    routes = (
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    );
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <DarkModeToggle />
+      {routes}
+    </Fragment>
   );
 }
 
