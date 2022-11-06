@@ -109,10 +109,14 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         setJwtToken(json.token);
         toast({
           title: "Registration succesfully",
+          description: "You are logged in, you will be redirected to home page in a few seconds",
           status: "success",
           duration: 5000,
           isClosable: true,
         });
+        setTimeout(() => {
+          window.location.reload();
+        },5000);
         handleClose();
       })
       .catch((response) => {

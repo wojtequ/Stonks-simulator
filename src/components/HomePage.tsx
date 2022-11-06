@@ -1,9 +1,16 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 
-export const HomePage = ()=>
-{
+
+export const HomePage = ()=>{
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('jwt');
+        window.location.reload();
+    };
     return(
-        <h1>sample home page</h1>
-
+        <Fragment>
+            <h1>sample home page</h1>
+            <button onClick={handleLogout}>Wyloguj</button>
+        </Fragment>
     )
 }

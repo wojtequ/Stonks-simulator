@@ -19,6 +19,8 @@ import {
 import { debounce } from "lodash";
 import React, { useEffect, useState } from "react";
 import { DEBOUNCE_TIMEOUT } from "./constants";
+import {setJwtToken} from "./utils";
+
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -31,50 +33,80 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const username_check = "admin";
-  const password_check = "Admin123!";
 
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
   const [userName, setUserName] = useState<string>("");
-  const [error, setError] = useState<boolean>(false);
+  const [userNameError, setUserNameError] = useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    error ? setIsFormValid(false) : setIsFormValid(true);
-  }, [error]);
+    userNameError || passwordError ? setIsFormValid(false) : setIsFormValid(true);
+  }, [userNameError, passwordError]);
 
   const handleUserNameChange = debounce((userName: string) => {
     setUserName(userName);
-    setError(false);
+    setUserNameError(false);
   }, DEBOUNCE_TIMEOUT);
 
   const handlePasswordChange = debounce((password: string) => {
     setPassword(password);
-    setError(false);
+    setPasswordError(false);
   }, DEBOUNCE_TIMEOUT);
 
   const toast = useToast();
-  const handleSave = () => {
-    if (userName !== username_check || password !== password_check) {
-      setError(true);
-      toast({
-        title: "Incorrect password or username",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
-    }
-    const a = { userName, password };
-    console.log(a);
-    toast({
-      title: "Login successful",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-    handleClose();
+
+  const handleSave = () =>
+  {
+    fetch("http://localhost:3000/api/login", {
+      method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userName, password }),
+    })
+        .then((response) => {
+          if(response.ok)
+          {
+            return response.json();
+          }
+          return Promise.reject(response);
+        })
+        .then((json) => {
+            setJwtToken(json.token);
+            toast({
+                title: "Login succesfully",
+                description: "You are logged in, you will be redirected to home page in a few seconds",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            },5000);
+            handleClose();
+
+        })
+        .catch((response) => {
+          response.json().then((json: {message: string}) => {
+            if(json.message === "User not found")
+            {
+              setUserNameError(true)
+            }else if(json.message === "Wrong password")
+            {
+                setPasswordError(true);
+            }
+
+            toast({
+              title: "Login failed",
+              description: json.message,
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
+          });
+        });
   };
 
   const handleClose = () => {
@@ -85,7 +117,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const reset = () => {
     setIsFormValid(true);
     setUserName("");
-    setError(false);
+    setUserNameError(false);
+    setPasswordError(false);
     setPassword("");
     setIsPasswordVisible(false);
   };
@@ -100,17 +133,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             <FormLabel>User Name</FormLabel>
             <Input
               placeholder="User Name"
-              isInvalid={error}
+              isInvalid={userNameError}
               onChange={(e) => handleUserNameChange(e.target.value)}
             />
           </FormControl>
           <FormControl>
             <FormLabel>
               Password{" "}
-              {error && (
+              {passwordError && (
                 <Tooltip
                   hasArrow
-                  label="Incorrect password or username"
+                  label="Incorrect password"
                   fontSize="md"
                 >
                   <InfoOutlineIcon color={"Red"} />
@@ -121,7 +154,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               <Input
                 type={isPasswordVisible ? "text" : "password"}
                 placeholder="Enter password"
-                isInvalid={error}
+                isInvalid={passwordError}
                 onChange={(e) => handlePasswordChange(e.target.value)}
               />
               <InputRightElement width="4.5rem">

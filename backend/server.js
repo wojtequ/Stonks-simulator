@@ -55,31 +55,38 @@ app.post("/api/register", async (req, res) => {
 });
 
 app.post("/api/login", async (req, res) => {
-  const user = await User.findOne({
-    userName: req.body.userName,
-  });
-  if (!user) {
-    return res.json({ status: "error", error: "user not found" });
-  }
+  try {
+    const user = await User.findOne({
+      userName: req.body.userName,
+    });
+    if (!user) {
+      return res.status(400).json({message: "User not found"});
+    }
 
-  const isPasswordValid = await bcrypt.compare(
-    req.body.password,
-    user.password
-  );
-
-  if (isPasswordValid) {
-    const token = jwt.sign(
-      {
-        userName: user.userName,
-      },
-      process.env.jwtkey
+    const isPasswordValid = await bcrypt.compare(
+        req.body.password,
+        user.password
     );
 
-    return res.json({ status: "ok", token: token });
-  } else {
-    return res.json({ status: "error", error: "wrong password" });
-  }
-});
+    if (!isPasswordValid) {
+        return res.status(400).json({message: "Wrong password"});
+    }
+    if (isPasswordValid) {
+      const token = jwt.sign(
+          {
+            userName: user.userName,
+          },
+          process.env.jwtkey
+      );
+
+      return res.json({status: "ok", token: token});
+    }
+  }catch(error) {
+      console.log(error)
+      return res.status(400).json({ message: "wrong password" });
+    }
+  });
+
 
 const port = 3000;
 app.listen(port, console.log(`Listening on port ${port}...`));
