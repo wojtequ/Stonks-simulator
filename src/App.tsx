@@ -1,10 +1,9 @@
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { getJwtToken } from "./components/authorization/utils";
-import { DarkModeToggle } from "./components/DarkModeToggle";
 import { HomePage } from "./components/HomePage";
 import { LandingPage } from "./components/LandingPage";
+import { getJwtToken} from "./components/authorization/utils";
 
 function App() {
   const user = getJwtToken();
@@ -28,7 +27,6 @@ function App() {
 
   return (
     <Fragment>
-      <DarkModeToggle />
       {routes}
     </Fragment>
   );
