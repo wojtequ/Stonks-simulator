@@ -1,11 +1,10 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
+import { getJwtToken } from "./components/authorization/utils";
+import { DarkModeToggle } from "./components/DarkModeToggle";
 import { HomePage } from "./components/HomePage";
 import { LandingPage } from "./components/LandingPage";
-import { DarkModeToggle } from "./components/DarkModeToggle";
-import { getJwtToken, removeJwtToken } from "./components/authorization/utils";
-import { Button } from "@chakra-ui/react";
 
 function App() {
   const user = getJwtToken();
