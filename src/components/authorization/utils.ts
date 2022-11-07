@@ -7,3 +7,5 @@ export function setJwtToken(token: string) {
 }
 
 export const removeJwtToken = () => sessionStorage.removeItem("jwt");
+
+export const isMobile = () => "ontouchstart" in window;

@@ -1,4 +1,3 @@
-import { InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   Button,
   FormControl,
@@ -14,12 +13,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Tooltip,
   UnorderedList,
   useToast,
 } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
+import { ErrorInfo } from "../ErrorInfo";
 import { DEBOUNCE_TIMEOUT } from "./constants";
 import { setJwtToken } from "./utils";
 
@@ -157,7 +156,12 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
-            <FormLabel>User Name</FormLabel>
+            <FormLabel>
+              User Name{" "}
+              {userNameError && (
+                <ErrorInfo label="User name should contain minimum 5 characters" />
+              )}
+            </FormLabel>
             <Input
               placeholder="User Name"
               isInvalid={userNameError}
@@ -167,11 +171,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
           <FormControl>
             <FormLabel>
               Password{" "}
-              {passwordError && (
-                <Tooltip hasArrow label={passwordRulesList} fontSize="md">
-                  <InfoOutlineIcon color={"Red"} />
-                </Tooltip>
-              )}
+              {passwordError && <ErrorInfo label={passwordRulesList} />}
             </FormLabel>
             <InputGroup>
               <Input

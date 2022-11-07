@@ -1,4 +1,3 @@
-import { InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   Button,
   FormControl,
@@ -13,14 +12,13 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Tooltip,
   useToast,
 } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import React, { useEffect, useState } from "react";
+import { ErrorInfo } from "../ErrorInfo";
 import { DEBOUNCE_TIMEOUT } from "./constants";
-import {setJwtToken} from "./utils";
-
+import { setJwtToken } from "./utils";
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -33,7 +31,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   onClose,
   onSave,
 }) => {
-
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
   const [userName, setUserName] = useState<string>("");
   const [userNameError, setUserNameError] = useState<boolean>(false);
@@ -42,7 +39,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    userNameError || passwordError ? setIsFormValid(false) : setIsFormValid(true);
+    userNameError || passwordError
+      ? setIsFormValid(false)
+      : setIsFormValid(true);
   }, [userNameError, passwordError]);
 
   const handleUserNameChange = debounce((userName: string) => {
@@ -57,56 +56,52 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   const toast = useToast();
 
-  const handleSave = () =>
-  {
+  const handleSave = () => {
     fetch("http://localhost:3000/api/login", {
       method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userName, password }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userName, password }),
     })
-        .then((response) => {
-          if(response.ok)
-          {
-            return response.json();
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject(response);
+      })
+      .then((json) => {
+        setJwtToken(json.token);
+        toast({
+          title: "Login succesfully",
+          description:
+            "You are logged in, you will be redirected to home page in a few seconds",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
+        handleClose();
+      })
+      .catch((response) => {
+        response.json().then((json: { message: string }) => {
+          if (json.message === "User not found") {
+            setUserNameError(true);
+          } else if (json.message === "Wrong password") {
+            setPasswordError(true);
           }
-          return Promise.reject(response);
-        })
-        .then((json) => {
-            setJwtToken(json.token);
-            toast({
-                title: "Login succesfully",
-                description: "You are logged in, you will be redirected to home page in a few seconds",
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-            });
-            setTimeout(() => {
-              window.location.reload();
-            },5000);
-            handleClose();
 
-        })
-        .catch((response) => {
-          response.json().then((json: {message: string}) => {
-            if(json.message === "User not found")
-            {
-              setUserNameError(true)
-            }else if(json.message === "Wrong password")
-            {
-                setPasswordError(true);
-            }
-
-            toast({
-              title: "Login failed",
-              description: json.message,
-              status: "error",
-              duration: 5000,
-              isClosable: true,
-            });
+          toast({
+            title: "Login failed",
+            description: json.message,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
           });
         });
+      });
   };
 
   const handleClose = () => {
@@ -140,15 +135,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           <FormControl>
             <FormLabel>
               Password{" "}
-              {passwordError && (
-                <Tooltip
-                  hasArrow
-                  label="Incorrect password"
-                  fontSize="md"
-                >
-                  <InfoOutlineIcon color={"Red"} />
-                </Tooltip>
-              )}
+              {passwordError && <ErrorInfo label="Incorrect password" />}
             </FormLabel>
             <InputGroup>
               <Input
