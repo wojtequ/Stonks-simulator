@@ -16,7 +16,9 @@ import {
 } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import React, { useEffect, useState } from "react";
+import { t } from "../../translations/utils";
 import { ErrorInfo } from "../ErrorInfo";
+import { VIEW_REDIRECT_TIMEOUT } from "../views/constants";
 import { DEBOUNCE_TIMEOUT } from "./constants";
 import { setJwtToken } from "./utils";
 
@@ -73,16 +75,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       .then((json) => {
         setJwtToken(json.token);
         toast({
-          title: "Login succesfully",
-          description:
-            "You are logged in, you will be redirected to home page in a few seconds",
+          title: t("toast.login.title.success"),
+          description: t("toast.login-success-description"),
           status: "success",
-          duration: 5000,
+          duration: VIEW_REDIRECT_TIMEOUT,
           isClosable: true,
         });
         setTimeout(() => {
           window.location.reload();
-        }, 5000);
+        }, VIEW_REDIRECT_TIMEOUT);
         handleClose();
       })
       .catch((response) => {
@@ -94,10 +95,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           }
 
           toast({
-            title: "Login failed",
+            title: t("toast.login.title.error"),
             description: json.message,
             status: "error",
-            duration: 5000,
+            duration: VIEW_REDIRECT_TIMEOUT,
             isClosable: true,
           });
         });
@@ -121,26 +122,28 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Log in to your account</ModalHeader>
+        <ModalHeader>{t("login.modal.title")}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
-            <FormLabel>User Name</FormLabel>
+            <FormLabel>{t("user-name")}</FormLabel>
             <Input
-              placeholder="User Name"
+              placeholder={t("user-name")}
               isInvalid={userNameError}
               onChange={(e) => handleUserNameChange(e.target.value)}
             />
           </FormControl>
           <FormControl>
             <FormLabel>
-              Password{" "}
-              {passwordError && <ErrorInfo label="Incorrect password" />}
+              {t("password")}{" "}
+              {passwordError && (
+                <ErrorInfo label={t("login.modal.password-error")} />
+              )}
             </FormLabel>
             <InputGroup>
               <Input
                 type={isPasswordVisible ? "text" : "password"}
-                placeholder="Enter password"
+                placeholder={t("password-placeholder")}
                 isInvalid={passwordError}
                 onChange={(e) => handlePasswordChange(e.target.value)}
               />
@@ -150,7 +153,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   size="sm"
                   onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                 >
-                  {isPasswordVisible ? "Hide" : "Show"}
+                  {isPasswordVisible ? t("password-hide") : t("password-show")}
                 </Button>
               </InputRightElement>
             </InputGroup>
@@ -163,7 +166,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             disabled={!isFormValid}
             style={{ width: "100%" }}
           >
-            Log in
+            {t("log-in")}
           </Button>
         </ModalFooter>
       </ModalContent>

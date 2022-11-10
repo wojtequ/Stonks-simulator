@@ -1,12 +1,18 @@
-import React, { Fragment } from "react";
+import { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { HomePage } from "./components/HomePage";
-import { LandingPage } from "./components/LandingPage";
-import { getJwtToken} from "./components/authorization/utils";
+import { getJwtToken } from "./components/authorization/utils";
+import { HomePage } from "./components/views/HomePage";
+import { LandingPage } from "./components/views/LandingPage";
+import { LanguageContext } from "./contexts/LanguageContext";
+import { getActiveLanguage, Language } from "./translations/utils";
 
 function App() {
   const user = getJwtToken();
+
+  const [activeLanguage, setActiveLanguage] = useState<Language>(
+    getActiveLanguage()
+  );
 
   let routes;
   if (user) {
@@ -26,9 +32,9 @@ function App() {
   }
 
   return (
-    <Fragment>
+    <LanguageContext.Provider value={{ activeLanguage, setActiveLanguage }}>
       {routes}
-    </Fragment>
+    </LanguageContext.Provider>
   );
 }
 
