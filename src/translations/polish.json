@@ -28,6 +28,11 @@
   "toast.login-success-description": "Zostałeś zalogowany, za chwilę zostaniesz przeniesiony na stronę główną",
   "toast.login.title.success": "Logowanie udane",
   "toast.login.title.error": "Logowanie nie udane",
+  "toast.login-error-description": "Użytkownik nie istnieje",
+  "home-page": "Główna",
+  "transactions": "Transakcje",
+  "details": "Szczegóły",
+  "profile": "Profil",
   "language.english": "Angielski",
   "language.polish": "Polski"
 }

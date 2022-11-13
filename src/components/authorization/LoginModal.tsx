@@ -89,18 +89,25 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       .catch((response) => {
         response.json().then((json: { message: string }) => {
           if (json.message === "User not found") {
+            toast({
+              title: t("toast.login.title.error"),
+              description: t("toast.login-error-description"),
+              status: "error",
+              duration: VIEW_REDIRECT_TIMEOUT,
+              isClosable: true,
+            });
             setUserNameError(true);
           } else if (json.message === "Wrong password") {
+            toast({
+              title: t("toast.login.title.error"),
+              description: t("login.modal.password-error"),
+              status: "error",
+              duration: VIEW_REDIRECT_TIMEOUT,
+              isClosable: true,
+            });
             setPasswordError(true);
           }
 
-          toast({
-            title: t("toast.login.title.error"),
-            description: json.message,
-            status: "error",
-            duration: VIEW_REDIRECT_TIMEOUT,
-            isClosable: true,
-          });
         });
       });
   };

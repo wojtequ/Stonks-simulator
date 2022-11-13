@@ -1,10 +1,7 @@
 import {
-  Button,
   Center,
   Container,
-  Flex,
   Select,
-  Spacer,
   Stat,
   StatGroup,
   StatLabel,
@@ -12,15 +9,13 @@ import {
 } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
 import { t } from "../../translations/utils";
-import { removeJwtToken } from "../authorization/utils";
-import { DarkModeToggle } from "../DarkModeToggle";
 
 export const HomePage = () => {
   type Data = {
     currency: string;
     value: number;
   };
-  const SYMBOLS: string = "USD,EUR,JPY,PLN,GBP,CNY,AUD,CAD,CHF,HKD";
+  // const SYMBOLS: string = "USD,EUR,JPY,PLN,GBP,CNY,AUD,CAD,CHF,HKD";
   const BASE_CURRENCY: string = "USD";
   //   const LATEST_URL: string = `https://api.exchangerate.host/latest?base=${BASE_CURRENCY}&symbols=${SYMBOLS}`;
   const LATEST_URL: string = `https://api.exchangerate.host/latest`;
@@ -32,10 +27,7 @@ export const HomePage = () => {
     setCurrency(e.target.value);
   };
 
-  const handleLogout = () => {
-    removeJwtToken();
-    window.location.reload();
-  };
+
 
   useEffect(() => {
     const getData = async () => {
@@ -54,12 +46,7 @@ export const HomePage = () => {
 
   return (
     <Fragment>
-      <Flex m={5}>
-        <DarkModeToggle />
-        <Spacer />
-        <Button onClick={handleLogout}>{t("logout")}</Button>
-      </Flex>
-      <Center>
+      <Center mt={10}>
         <Container maxW="md">
           <Select onChange={handleCurrencyChange}>
             <option hidden disabled value="">

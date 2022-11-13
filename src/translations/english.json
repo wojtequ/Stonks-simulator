@@ -28,6 +28,11 @@
   "toast.login-success-description": "You are logged in, you will be redirected to home page in a few seconds",
   "toast.login.title.success": "Login succesfully",
   "toast.login.title.error": "Login failed",
+  "toast.login-error-description": "User not exists",
+  "home-page": "Home",
+  "transactions": "Transactions",
+  "details": "Details",
+  "profile": "Profile",
   "language.english": "English",
   "language.polish": "Polish"
 }
