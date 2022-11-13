@@ -6,15 +6,20 @@ import {
   Highlight,
   Image,
   Text,
+  useColorMode,
   VStack,
 } from "@chakra-ui/react";
 import { Fragment, useState } from "react";
 import { LanguageSelect } from "../../translations/LanguageSelect";
-import { t } from "../../translations/utils";
+import { getActiveLanguage, Language, t } from "../../translations/utils";
 import { LoginModal } from "../authorization/LoginModal";
 import { RegisterModal } from "../authorization/RegisterModal";
+import { isMobile } from "../authorization/utils";
+import "./landing_page.css";
 
 export const LandingPage = () => {
+  const { colorMode } = useColorMode();
+
   const [isRegisterModalOpened, setIsRegisterModalOpened] =
     useState<boolean>(false);
 
@@ -46,7 +51,16 @@ export const LandingPage = () => {
               boxSize="250px"
             />
           </Box>
-          <Text fontSize="2xl">{t("landingPage.description")}</Text>
+          <Text
+            className={`landing-page__description ${
+              getActiveLanguage() === Language.English
+                ? "english-language"
+                : "polish-language"
+            } ${colorMode === "dark" ? "dark-mode" : "light-mode"}`}
+            fontSize={isMobile() ? "2xl" : "5xl"}
+          >
+            {t("landingPage.description")}
+          </Text>
           <div>
             <Fragment>
               <ButtonGroup gap="2">
