@@ -117,12 +117,13 @@ export const Sidebar: React.FC<NavbarProps> = ({
       top={0}
       h="100%"
       boxShadow="dark-lg"
+      className="type-sidebar"
     >
       <SidebarContent onClick={onClose} />
     </Box>
   ) : (
     <Drawer isOpen={isOpen} placement="left" onClose={onClose} size="full">
-      <DrawerOverlay>
+      <DrawerOverlay className="type-drawer">
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerBody>

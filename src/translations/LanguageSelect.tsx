@@ -1,6 +1,6 @@
-import { Select } from "@chakra-ui/react";
+import { Icon, Select } from "@chakra-ui/react";
 import { useContext } from "react";
-import { WordIcon } from "../components/icons/WordIcon";
+import { IoLanguage } from "react-icons/io5";
 import { LanguageContext } from "../contexts/LanguageContext";
 import { getActiveLanguage, Language, t } from "./utils";
 
@@ -15,7 +15,7 @@ export const LanguageSelect = () => {
     <div style={{ maxWidth: "120px" }}>
       <Select
         defaultValue={getActiveLanguage()}
-        icon={<WordIcon />}
+        icon={<Icon as={IoLanguage} />}
         variant="filled"
         onChange={(e) => handleLanguageChange(e.target.value as Language)}
       >
