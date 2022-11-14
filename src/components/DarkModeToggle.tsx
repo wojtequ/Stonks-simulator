@@ -1,7 +1,7 @@
-import { Switch, useColorMode } from "@chakra-ui/react";
+import { Flex, Icon, Switch, useColorMode } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
-import { t } from "../translations/utils";
+import { FiMoon, FiSun } from "react-icons/fi";
 
 export const DarkModeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -10,15 +10,20 @@ export const DarkModeToggle = () => {
   useEffect(() => setChecked(colorMode === "dark"), [colorMode]);
 
   return (
-    <Switch
-      isChecked={checked}
-      onChange={() => {
-        setChecked(!checked);
-        handleColorModeChange();
-      }}
-    >
-      {" "}
-      {colorMode === "light" ? t("colormode.light") : t("colormode.dark")}
-    </Switch>
+    <Flex justify="space-between">
+      <Switch
+        isChecked={checked}
+        onChange={() => {
+          setChecked(!checked);
+          handleColorModeChange();
+        }}
+        paddingRight="10px"
+      />
+      {colorMode === "light" ? (
+        <Icon w={5} h={5} as={FiSun} />
+      ) : (
+        <Icon w={5} h={5} as={FiMoon} />
+      )}
+    </Flex>
   );
 };
