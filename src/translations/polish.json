@@ -35,5 +35,7 @@
   "profile": "Profil",
   "language.english": "Angielski",
   "language.polish": "Polski",
-  "hello-user": "Witaj, "
+  "hello-user": "Witaj, ",
+  "total-balance": "Całkowity bilans",
+  "in-tihs-month": "W tym miesiącu"
 }

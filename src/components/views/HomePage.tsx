@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
 import { t } from "../../translations/utils";
+import { BallanceCard } from "../BallanceCard";
 
 export const HomePage = () => {
   type Data = {
@@ -26,8 +27,6 @@ export const HomePage = () => {
   const handleCurrencyChange = (e: any) => {
     setCurrency(e.target.value);
   };
-
-
 
   useEffect(() => {
     const getData = async () => {
@@ -48,6 +47,8 @@ export const HomePage = () => {
     <Fragment>
       <Center mt={10}>
         <Container maxW="md">
+          <BallanceCard />
+          {/* -------------------------------------------------------------------- */}
           <Select onChange={handleCurrencyChange}>
             <option hidden disabled value="">
               Select currency
