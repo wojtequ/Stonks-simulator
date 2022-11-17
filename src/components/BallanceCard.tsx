@@ -5,7 +5,7 @@ import { t } from "../translations/utils";
 export const BallanceCard = () => {
   return (
     <Fragment>
-      <Box borderRadius="2xl" overflow={"hidden"} maxW='sm'>
+      <Box borderRadius="2xl" overflow={"hidden"} minW='310px' maxW='sm' justifySelf="center" boxShadow="2xl">
         <Box bg={"#1782FF"}>
           <Box paddingLeft="15px" paddingTop="10px" paddingBottom="25px">
             <Text color="white">{t("total-balance")}</Text>
