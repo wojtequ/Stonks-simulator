@@ -37,10 +37,11 @@ app.post("/api/register", async (req, res) => {
       const token = jwt.sign(
         {
           userName: user.userName,
+
         },
         process.env.jwtkey
       );
-      res.json({ status: "ok", token: token });
+      return res.json({status: "ok", token: token,userName:user.userName});
     }
     if (!isUserNameValid) {
       res.status(400).json({ message: "wrong username" });
@@ -75,17 +76,63 @@ app.post("/api/login", async (req, res) => {
       const token = jwt.sign(
           {
             userName: user.userName,
+
           },
           process.env.jwtkey
       );
 
-      return res.json({status: "ok", token: token});
+      return res.json({status: "ok", token: token,userName:user.userName});
     }
   }catch(error) {
       console.log(error)
       return res.status(400).json({ message: "wrong password" });
     }
   });
+
+app.put("/api/balance", async(req,res) => {
+try{
+  const filter = { userName:req.body.userName };
+  const update = {$inc: {"balance":req.body.balance}}; 
+  const user = await User.findOne(filter)
+  if (!user) {
+    return res.status(400).json({message: "User not found"});
+  }
+ 
+  const updatedUser = await User.findOneAndUpdate(filter,update)
+
+ return res.json({status: "ok",});
+}catch(error){
+  console.log(error)
+  return res.status(400).json({ message: "Invalid balance" });
+}
+
+});
+
+app.get("/api/balance2", async(req,res) => {
+  try{
+    const filter = { userName:req.query.userName };
+    const user = await User.findOne(filter)
+    if (!user) {
+      return res.status(400).json({message: "User not found"});
+    }  
+   return res.json({status: "ok", balance:user.balance});
+  }catch(error){
+    console.log(error)
+    return res.status(400).json({ message: "Invalid balance" });
+  }
+  
+  });
+
+
+// const newUser = new User({
+//   userName: "Andriejjjjjjjjj",
+//     password: "dupaaaaaaa",
+//     balance: 400,
+//   ownedStocks: [
+//       { stockName: 'xyz', stockCount: 10 }, { stockName: 'ABC', stockCount: 20 },
+//       { stockName: 'pqr', stockCount: 10 }]
+// });
+// newUser.save();
 
 
 const port = 3000;
