@@ -1,56 +1,77 @@
 import {
   Button,
-  ButtonGroup,
   Center,
   Container,
-  Text,
-  VStack,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   SimpleGrid,
-  Icon
 } from "@chakra-ui/react";
-import React, { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { t } from "../../translations/utils";
 import { BallanceCard } from "../BallanceCard";
-import {TbArrowsDownUp} from "react-icons/tb";
-import {AiOutlinePlus} from "react-icons/ai";
-import {BsWallet2} from "react-icons/bs";
+import { BallanceManagmentButtonGroup } from "../BallanceManagmentButtonGroup";
 
 export const HomePage = () => {
-
-  const ButtonStyle =
-      {
-        width: '100px',
-        height: '73px',
-      };
-
+  const [isAddFoundsModalOpened, setIsAddFoundsModalOpened] =
+    useState<boolean>(false);
   return (
     <Fragment>
       <Center mt={10}>
-        <Container maxW='2xl'>
-          <SimpleGrid minChildWidth='312px' columns={2} spacing={4} alignItems="center" justifyContent="center">
-
+        <Container maxW="2xl">
+          <SimpleGrid
+            minChildWidth="312px"
+            columns={2}
+            spacing={4}
+            alignItems="center"
+            justifyContent="center"
+          >
             <BallanceCard />
-          
-            <ButtonGroup justifySelf="center">
-              <Button style={ButtonStyle}>
-                <VStack>
-                  <Text fontSize='sm'>Transfer</Text>
-                  <Icon w={6} h={6} as={TbArrowsDownUp}/>
-              </VStack>
-              </Button>
-              <Button style={ButtonStyle}>
-                <VStack>
-                  <Text fontSize='sm'>{t("add-funds")}</Text>
-                  <Icon w={6} h={6} as={AiOutlinePlus}/>
-                </VStack>
-              </Button>
-              <Button style={ButtonStyle}>
-                <VStack>
-                  <Text fontSize='sm'>{t("details")}</Text>
-                  <Icon w={6} h={6} as={BsWallet2}/>
-                </VStack>
-              </Button>
-            </ButtonGroup>
+            <BallanceManagmentButtonGroup
+              openAddFounds={() => setIsAddFoundsModalOpened(true)}
+            />
+            <Modal
+              isOpen={isAddFoundsModalOpened}
+              isCentered
+              onClose={() => setIsAddFoundsModalOpened(false)}
+            >
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>
+                  <ModalCloseButton />
+                </ModalHeader>
+                <ModalBody padding={"10%"}>
+                  {/* <Flex> */}
+                  <Flex direction={"column"}>
+                    <NumberInput allowMouseWheel>
+                      <NumberInputField
+                        placeholder={t(
+                          "add-funds.modal.number-input-placeholder"
+                        )}
+                      />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                    <Button colorScheme="blue" width="100%" marginTop="10%">
+                      {t("add-funds.modal.add-button")}
+                    </Button>
+                    {/* </Flex> */}
+                    {/* <BallanceCard /> */}
+                  </Flex>
+                </ModalBody>
+              </ModalContent>
+            </Modal>
           </SimpleGrid>
         </Container>
       </Center>

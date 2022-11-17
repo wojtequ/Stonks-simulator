@@ -38,5 +38,7 @@
   "hello-user": "Hello, ",
   "add-funds": "Add funds",
   "total-balance": "Total balance",
-  "in-tihs-month": "In this month"
+  "in-tihs-month": "In this month",
+  "add-funds.modal.number-input-placeholder": "How Many Founds",
+  "add-funds.modal.add-button": "Add Funds"
 }
