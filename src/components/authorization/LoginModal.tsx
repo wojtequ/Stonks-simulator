@@ -20,7 +20,7 @@ import { t } from "../../translations/utils";
 import { ErrorInfo } from "../ErrorInfo";
 import { VIEW_REDIRECT_TIMEOUT } from "../views/constants";
 import { DEBOUNCE_TIMEOUT } from "./constants";
-import { setJwtToken } from "./utils";
+import { setJwtToken, setUserNameInSessionStorage } from "./utils";
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -74,6 +74,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       })
       .then((json) => {
         setJwtToken(json.token);
+        setUserNameInSessionStorage(json.userName);
         toast({
           title: t("toast.login.title.success"),
           description: t("toast.login-success-description"),
@@ -107,7 +108,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             });
             setPasswordError(true);
           }
-
         });
       });
   };

@@ -40,5 +40,7 @@
   "total-balance": "Total balance",
   "in-tihs-month": "In this month",
   "add-funds.modal.number-input-placeholder": "How Many Founds",
-  "add-funds.modal.add-button": "Add Funds"
+  "add-funds.modal.add-button": "Add Funds",
+  "add-funds.modal.card.title": "Your Actual Total Balance",
+  "add-funds.modal.card.after-add": "After Added Funds"
 }

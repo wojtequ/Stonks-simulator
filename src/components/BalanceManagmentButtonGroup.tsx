@@ -10,12 +10,12 @@ const ButtonStyle = {
   height: "73px",
 };
 
-type BallanceManagmentButtonGroupProps = {
+type BalanceManagmentButtonGroupProps = {
   openAddFounds: VoidFunction;
 };
 
-export const BallanceManagmentButtonGroup: React.FC<
-  BallanceManagmentButtonGroupProps
+export const BalanceManagmentButtonGroup: React.FC<
+  BalanceManagmentButtonGroupProps
 > = ({ openAddFounds }) => {
   return (
     <ButtonGroup justifySelf="center">

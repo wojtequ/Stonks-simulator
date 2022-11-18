@@ -40,5 +40,7 @@
   "total-balance": "Całkowity bilans",
   "in-tihs-month": "W tym miesiącu",
   "add-funds.modal.number-input-placeholder": "Jak Dużo Funduszy",
-  "add-funds.modal.add-button": "Dodaj Fundusze"
+  "add-funds.modal.add-button": "Dodaj Fundusze",
+  "add-funds.modal.card.title": "Twój Aktualny Balans",
+  "add-funds.modal.card.after-add": "Po Dodaniu Funduszy"
 }

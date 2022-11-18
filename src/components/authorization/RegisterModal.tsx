@@ -22,7 +22,7 @@ import { t } from "../../translations/utils";
 import { ErrorInfo } from "../ErrorInfo";
 import { VIEW_REDIRECT_TIMEOUT } from "../views/constants";
 import { DEBOUNCE_TIMEOUT } from "./constants";
-import { setJwtToken } from "./utils";
+import { setJwtToken, setUserNameInSessionStorage } from "./utils";
 
 type RegisterModalProps = {
   isOpen: boolean;
@@ -115,6 +115,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         return Promise.reject(response);
       })
       .then((json) => {
+        setUserNameInSessionStorage(json.userName);
         setJwtToken(json.token);
         toast({
           title: t("toast.registration.title.success"),
