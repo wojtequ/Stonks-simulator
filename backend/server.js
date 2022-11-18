@@ -108,7 +108,7 @@ try{
 
 });
 
-app.get("/api/balance2", async(req,res) => {
+app.get("/api/balance", async(req,res) => {
   try{
     const filter = { userName:req.query.userName };
     const user = await User.findOne(filter)
