@@ -6,6 +6,7 @@ import {
   getUserNameFromSessionStorage,
   removeJwtToken,
 } from "../authorization/utils";
+import "./Navigation.css";
 
 type HeaderProps = {
   onShowSidebar: VoidFunction;
@@ -38,6 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Text fontSize="2xl">{`${t(
             "hello-user"
           )}${getUserNameFromSessionStorage()}`}</Text>
+          <span className="header-avatar">{getUserNameFromSessionStorage()?.substring(0,1)?.toUpperCase()}</span>
           <Button onClick={handleLogout}>{t("logout")}</Button>
         </HStack>
       </Box>
