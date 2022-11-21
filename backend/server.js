@@ -37,7 +37,6 @@ app.post("/api/register", async (req, res) => {
       const token = jwt.sign(
         {
           userName: user.userName,
-
         },
         process.env.jwtkey
       );
@@ -89,9 +88,9 @@ app.post("/api/login", async (req, res) => {
     }
   });
 
-app.put("/api/balance", async(req,res) => {
+app.put("/api/balance", auth, async(req,res) => {
 try{
-  const filter = { userName:req.body.userName };
+  const filter = { userName:req.user.userName };
   const update = {$inc: {"balance":req.body.balance}}; 
   const user = await User.findOne(filter)
   if (!user) {
@@ -108,9 +107,9 @@ try{
 
 });
 
-app.get("/api/balance", async(req,res) => {
+app.get("/api/balance", auth, async(req,res) => {
   try{
-    const filter = { userName:req.query.userName };
+    const filter = { userName:req.user.userName };
     const user = await User.findOne(filter)
     if (!user) {
       return res.status(400).json({message: "User not found"});
@@ -123,6 +122,16 @@ app.get("/api/balance", async(req,res) => {
   
   });
 
+  function auth(req,res,next){
+    const authHeder=req.headers["authorization"]
+    const token = authHeder.split(' ')[1]
+    if(token==null) return res.status(400).json({message:"No token provided"})
+    jwt.verify(token,process.env.jwtkey, (err,user)=>{
+      if(err) return res.status(403).json({message: "Invalid token"}) 
+      req.user=user
+    })
+    next()
+  }
 
 // const newUser = new User({
 //   userName: "Andriejjjjjjjjj",
