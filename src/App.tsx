@@ -10,6 +10,8 @@ import { LanguageContext } from "./contexts/LanguageContext";
 import { getActiveLanguage, Language } from "./translations/utils";
 import {Box, useBreakpointValue} from "@chakra-ui/react";
 import {Header} from "./components/navigation/Header";
+import {Details} from "./components/views/Details";
+import {Profile} from "./components/views/Profile";
 
 const smVariant = {navigation: 'drawer', navigationButton: true}
 const mdVariant = {navigation: 'sidebar', navigationButton: false}
@@ -42,6 +44,8 @@ function App() {
         <Routes>
             <Route path="/homepage" element={<HomePage/>}/>
             <Route path="/transactions" element={<Transactions/>}/>
+            <Route path="/details" element={<Details/>}/>
+            <Route path="/profile" element={<Profile/>}/>
             <Route path="*" element={<Navigate to="/homepage"/>}/>
         </Routes>
 

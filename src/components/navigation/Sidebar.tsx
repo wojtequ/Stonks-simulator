@@ -73,7 +73,7 @@ const SidebarContent: React.FC<SideBarContentProps> = ({ onClick }) => (
       {t("transactions")}
     </NavLink>
     <NavLink
-      to="#"
+      to="/details"
       id="navlink"
       className={({ isActive }) => (isActive ? activeLinkClassName : undefined)}
       onClick={onClick}
@@ -88,7 +88,7 @@ const SidebarContent: React.FC<SideBarContentProps> = ({ onClick }) => (
       {t("details")}
     </NavLink>
     <NavLink
-      to="#"
+      to="/profile"
       id="navlink"
       className={({ isActive }) => (isActive ? activeLinkClassName : undefined)}
       onClick={onClick}
