@@ -20,26 +20,28 @@ type AddFundsModalProps = {
   isOpened: boolean;
   balance: number;
   onClose: VoidFunction;
+  onSubmit: (addedFunds: number)=>void
 };
 
 export const AddFundsModal: React.FC<AddFundsModalProps> = ({
   isOpened,
   balance,
   onClose,
+  onSubmit,
 }) => {
-  const [newBallance, setNewBallance] = useState<number>(balance);
+  const [newBalance, setNewBalance] = useState<number>(balance);
 
   useEffect(() => {
-    setNewBallance(balance);
+    setNewBalance(balance);
   }, [balance]);
 
   const handleChangeAddFunds = (newValue: number) => {
-    const newBallance = Number((balance + newValue).toFixed(2));
-    newValue && setNewBallance(newBallance >= 0 ? newBallance : 0);
+    const newBalance = Number((balance + newValue).toFixed(2));
+    newValue && setNewBalance(newBalance >= 0 ? newBalance : 0);
   };
 
   const handleClose = () => {
-    setNewBallance(balance);
+    setNewBalance(balance);
     onClose();
   };
 
@@ -68,12 +70,12 @@ export const AddFundsModal: React.FC<AddFundsModalProps> = ({
                     }
                   />
                 </NumberInput>
-                <Button colorScheme="blue" width="100%" marginTop="10%">
+                <Button colorScheme="blue" width="100%" marginTop="10%" onClick={()=>{onSubmit(newBalance - balance);onClose()}}>
                   {t("add-funds.modal.add-button")}
                 </Button>
               </Flex>
             </Box>
-            <AddBallanceCard ballance={balance} newBallance={newBallance} />
+            <AddBallanceCard ballance={balance} newBallance={newBalance} />
           </SimpleGrid>
         </ModalBody>
       </ModalContent>

@@ -57,7 +57,7 @@ export const LandingPage = () => {
                 ? "english-language"
                 : "polish-language"
             } ${colorMode === "dark" ? "dark-mode" : "light-mode"}`}
-            fontSize={isMobile() ? "2xl" : "5xl"}
+            fontSize={isMobile() ? "xl" : "5xl"}
           >
             {t("landingPage.description")}
           </Text>

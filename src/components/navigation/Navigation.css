@@ -31,13 +31,13 @@
 }
 
 #navlink:hover {
-  color: blue;
+  color: #7dcaff;
 }
 
 .navbar-icon {
   vertical-align: sub;
 }
-.header-avatar{
+.header-avatar {
   width: 40px;
   line-height: 40px;
   border-radius: 50%;

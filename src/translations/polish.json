@@ -42,5 +42,6 @@
   "add-funds.modal.number-input-placeholder": "Jak Dużo Funduszy",
   "add-funds.modal.add-button": "Dodaj Fundusze",
   "add-funds.modal.card.title": "Twój Aktualny Balans",
-  "add-funds.modal.card.after-add": "Po Dodaniu Funduszy"
+  "add-funds.modal.card.after-add": "Po Dodaniu Funduszy",
+  "toast.homepage.add.funds.success": "Pomyślnie zaktualizowano fundusze"
 }

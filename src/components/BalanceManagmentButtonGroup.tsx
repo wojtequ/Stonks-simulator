@@ -6,7 +6,7 @@ import { TbArrowsDownUp } from "react-icons/tb";
 import { t } from "../translations/utils";
 
 const ButtonStyle = {
-  width: "100px",
+  width: "105px",
   height: "73px",
 };
 

@@ -42,5 +42,6 @@
   "add-funds.modal.number-input-placeholder": "How Many Founds",
   "add-funds.modal.add-button": "Add Funds",
   "add-funds.modal.card.title": "Your Actual Total Balance",
-  "add-funds.modal.card.after-add": "After Added Funds"
+  "add-funds.modal.card.after-add": "After Added Funds",
+  "toast.homepage.add.funds.success": "Funds updated succesfully"
 }

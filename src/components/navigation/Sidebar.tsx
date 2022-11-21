@@ -28,10 +28,14 @@ type NavbarProps = {
   variant: "drawer" | "sidebar";
 };
 
+type SideBarContentProps = {
+  onClick: VoidFunction;
+};
+
 const activeLinkClassName = "active";
 const NAVBAR_ICON_CLASS_NAME = "navbar-icon";
 
-const SidebarContent = ({ onClick }: { onClick: Function }) => (
+const SidebarContent: React.FC<SideBarContentProps> = ({ onClick }) => (
   <VStack align="">
     <Box mb={16} p={5}>
       <Text fontSize="xl" fontWeight="bold" color="blue.400">
@@ -42,6 +46,7 @@ const SidebarContent = ({ onClick }: { onClick: Function }) => (
       to="/homepage"
       id="navlink"
       className={({ isActive }) => (isActive ? activeLinkClassName : undefined)}
+      onClick={onClick}
     >
       <Icon
         className={NAVBAR_ICON_CLASS_NAME}
@@ -56,6 +61,7 @@ const SidebarContent = ({ onClick }: { onClick: Function }) => (
       to="/transactions"
       id="navlink"
       className={({ isActive }) => (isActive ? activeLinkClassName : undefined)}
+      onClick={onClick}
     >
       <Icon
         className={NAVBAR_ICON_CLASS_NAME}
@@ -70,6 +76,7 @@ const SidebarContent = ({ onClick }: { onClick: Function }) => (
       to="#"
       id="navlink"
       className={({ isActive }) => (isActive ? activeLinkClassName : undefined)}
+      onClick={onClick}
     >
       <Icon
         className={NAVBAR_ICON_CLASS_NAME}
@@ -84,6 +91,7 @@ const SidebarContent = ({ onClick }: { onClick: Function }) => (
       to="#"
       id="navlink"
       className={({ isActive }) => (isActive ? activeLinkClassName : undefined)}
+      onClick={onClick}
     >
       <Icon
         className={NAVBAR_ICON_CLASS_NAME}
@@ -119,7 +127,11 @@ export const Sidebar: React.FC<NavbarProps> = ({
       boxShadow="dark-lg"
       className="type-sidebar"
     >
-      <SidebarContent onClick={onClose} />
+      <SidebarContent
+        onClick={() => {
+          onClose();
+        }}
+      />
     </Box>
   ) : (
     <Drawer isOpen={isOpen} placement="left" onClose={onClose} size="full">
