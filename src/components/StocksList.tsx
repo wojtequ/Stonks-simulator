@@ -1,6 +1,7 @@
 import { Box, Flex, HStack, Image, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { Line, LineChart } from "recharts";
+import { t } from "../translations/utils";
 
 const data = [
   {
@@ -51,6 +52,69 @@ const stocks: Stock[] = [
     shortcut: "TSLA",
     stockName: "Tesla",
     price: 200,
+    percentage: 4.5,
+    chart: data,
+  },
+  {
+    image:
+      "https://www.freepnglogos.com/uploads/apple-logo-png/file-apple-logo-black-svg-wikimedia-commons-1.png",
+    shortcut: "AAPL",
+    stockName: "Apple Inc.",
+    price: 120,
+    percentage: 2.5,
+    chart: data,
+  },
+  {
+    image:
+      "https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png",
+    shortcut: "GOOG",
+    stockName: "Google",
+    price: 100,
+    percentage: 1.5,
+    chart: data,
+  },
+  {
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tesla_T_symbol.svg/255px-Tesla_T_symbol.svg.png?20170327222004",
+    shortcut: "TSLA",
+    stockName: "Tesla",
+    price: 200,
+    percentage: 4.5,
+    chart: data,
+  },
+  {
+    image:
+      "https://www.freepnglogos.com/uploads/apple-logo-png/file-apple-logo-black-svg-wikimedia-commons-1.png",
+    shortcut: "AAPL",
+    stockName: "Apple Inc.",
+    price: 120,
+    percentage: 2.5,
+    chart: data,
+  },
+  {
+    image:
+      "https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png",
+    shortcut: "GOOG",
+    stockName: "Google",
+    price: 100,
+    percentage: 1.5,
+    chart: data,
+  },
+  {
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tesla_T_symbol.svg/255px-Tesla_T_symbol.svg.png?20170327222004",
+    shortcut: "TSLA",
+    stockName: "Tesla",
+    price: 200,
+    percentage: 4.5,
+    chart: data,
+  },
+  {
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tesla_T_symbol.svg/255px-Tesla_T_symbol.svg.png?20170327222004",
+    shortcut: "TSLA",
+    stockName: "Tesla",
+    price: 200.76,
     percentage: 4.5,
     chart: data,
   },
@@ -105,53 +169,49 @@ export const RadioCard: React.FC<RadioCardProps> = ({
       _checked={{
         borderColor: "black",
       }}
-      px={2}
-      py={3}
+      px={3}
+      py={4}
       onClick={() => {
         stockChange(shortcut);
       }}
     >
-      <HStack spacing={4}>
+      <HStack spacing={5} justifyContent='space-between'>
         <Image src={image} w="39px" h="39px" />
+        <Box width='55px'>
+          <VStack display="block" float="left">
+            <Text fontSize="12px">{shortcut}</Text>
+            <Text fontSize="12px" color="#6D6D6D">
+              {stockName}
+            </Text>
+          </VStack>
+        </Box>
         <Box>
-          <HStack spacing={4}>
-            <Box width={"25%"}>
-              <VStack display="block" float="left">
-                <Text fontSize="12px">{shortcut}</Text>
-                <Text fontSize="12px" color="#6D6D6D">
-                  {stockName}
-                </Text>
-              </VStack>
-            </Box>
-            <Box width={"50%"}>
-              <LineChart width={99} height={50} data={chart}>
-                <Line
-                  type="monotone"
-                  dataKey="pv"
-                  stroke="#6CB8D6"
-                  dot={false}
-                />
-              </LineChart>
-            </Box>
-            <Box width={"25%"}>
-              <VStack
-                lineHeight="1"
-                display="block"
-                float="right"
-                textAlign="right"
-              >
-                <Text fontSize="16px" color="#139602">
-                  {percentage}
-                </Text>
-                <Text fontSize="16px" fontWeight="bold">
-                  {price}
-                </Text>
-                <Text fontSize="12px" color="#6D6D6D">
-                  Auction price
-                </Text>
-              </VStack>
-            </Box>
-          </HStack>
+          <LineChart width={99} height={50} data={chart}>
+            <Line
+              type="monotone"
+              dataKey="pv"
+              stroke="#6CB8D6"
+              dot={false}
+            />
+          </LineChart>
+        </Box>
+        <Box>
+          <VStack
+            lineHeight="1"
+            display="block"
+            float="right"
+            textAlign="right"
+          >
+            <Text fontSize="16px" color="#139602">
+              {`${percentage}%`}
+            </Text>
+            <Text fontSize="16px" fontWeight="bold">
+              {`${price}$`}
+            </Text>
+            <Text fontSize="12px" color="#6D6D6D">
+              {t("stock.price")}
+            </Text>
+          </VStack>
         </Box>
       </HStack>
     </Box>
@@ -170,7 +230,7 @@ export const StocksList = () => {
       width={"fit-content"}
       //   maxWidth={"40%"}
       //height that small for scroll tests
-      height={"180px"}
+      height={"420px"}
       overflow={"auto"}
       background={"#1782FF"}
       padding="12px"

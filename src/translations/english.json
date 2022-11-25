@@ -43,5 +43,6 @@
   "add-funds.modal.add-button": "Add Funds",
   "add-funds.modal.card.title": "Your Actual Total Balance",
   "add-funds.modal.card.after-add": "After Added Funds",
-  "toast.homepage.add.funds.success": "Funds updated succesfully"
+  "toast.homepage.add.funds.success": "Funds updated succesfully",
+  "stock.price": "Stock Price"
 }
