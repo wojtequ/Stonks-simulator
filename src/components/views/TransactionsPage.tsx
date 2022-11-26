@@ -1,10 +1,12 @@
-import { Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
+import { StockChart } from "../StockChart";
 import { StocksList } from "../StocksList";
 
 export const TransactionsPage = () => {
   return (
-    <Box padding={"30px"}>
+    <Flex padding={"30px"} gap="50px">
       <StocksList />
-    </Box>
+      <StockChart />
+    </Flex>
   );
 };
