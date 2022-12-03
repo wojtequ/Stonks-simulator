@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 
 const TransactionsMadeSchema = new mongoose.Schema({
     transactionDate: {type: Date},
-    transactionBalance: {type: Number},
     stockName: {type: String},
     stockCount: {type: Number},
     buyOrSell: {type: Boolean},
