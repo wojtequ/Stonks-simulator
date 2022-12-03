@@ -4,9 +4,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const User = require("./models/user");
+const OwnedStocks = require("./models/ownedStocks");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
+const { Z_NEED_DICT } = require("zlib");
 const loginRegExp = /.{5,}/;
 const passwordRegExp =
   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
@@ -222,6 +224,45 @@ app.get("/api/stocks/date/", async (req, res) => {
     console.log(error);
     return res.status(400).json({ message: "Invalid Call" });
   }
+});
+
+app.put("/api/buy", auth, async (req, res) =>{
+    const transactionCost = req.body.price*req.body.stockCount;
+    const date = new Date()
+    const filterUser = {userName: req.user.userName};
+    const user= await User.findOne(filterUser)
+    if(!companies.includes(req.body.stockName)){
+      return res.status(400).json({ message: "Invalid company" });
+    }
+    if(transactionCost > user.balance){
+      return res.status(400).json({ message: "Insufficient funds" });
+    }
+    const updateBalance = await User.updateOne({_id: user._id,}, {$inc:{balance: -transactionCost}})
+    
+    const transactionData = {
+      transactionDate: date, 
+      stockName: req.body.stockName,
+      stockCount: req.body.stockCount,
+      buyOrSell: false,
+      transactionCost: transactionCost,
+      stockPrice: req.body.price
+    }
+  
+    const updateTransactionHistory = await User.updateOne({_id: user._id}, {"$push": {"transactions": transactionData}})
+    var stock = user.ownedStocks.find(element => element.stockName == req.body.stockName)
+    if(stock){
+      const updatedstock = await User.updateOne({ _id: user._id, "ownedStocks.stockName": stock.stockName },{ $inc: {
+        "ownedStocks.$.stockCount": req.body.stockCount,
+     } })
+      return res.json({status: "ok"});
+    }
+    else{
+      const itemBought = {stockName: req.body.stockName, stockCount:req.body.stockCount}
+      const update = {"$push": {"ownedStocks": itemBought}}
+      const newstock = await User.updateOne({ _id: user._id}, update)
+      return res.json({status: "ok created"});
+    }
+    
 });
 
 function auth(req, res, next) {
