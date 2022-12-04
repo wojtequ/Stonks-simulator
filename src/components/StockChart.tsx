@@ -5,8 +5,9 @@ import {
   Flex,
   Input,
   LightMode,
+  Skeleton,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -16,37 +17,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-
-const data = [
-  {
-    pv: 2400,
-    name: "1pm",
-  },
-  {
-    pv: 1398,
-    name: "2pm",
-  },
-  {
-    pv: 9800,
-    name: "3pm",
-  },
-  {
-    pv: 3908,
-    name: "4pm",
-  },
-  {
-    pv: 4800,
-    name: "5pm",
-  },
-  {
-    pv: 3800,
-    name: "6pm",
-  },
-  {
-    pv: 4300,
-    name: "7pm",
-  },
-];
+import { ChartData, ChartPoint } from "./views/TransactionsPage";
 
 enum TimePeriod {
   Day = "oneDay",
@@ -55,13 +26,98 @@ enum TimePeriod {
   Year = "onYear",
 }
 
-export const StockChart = () => {
+type StockChartProps = {
+  selectedStock: string;
+  lastDayData: ChartData[];
+};
+
+export const StockChart: React.FC<StockChartProps> = ({
+  selectedStock,
+  lastDayData,
+}) => {
   const [activePeriodOfTime, setActivePeriodOfTime] = useState<TimePeriod>(
     TimePeriod.Day
   );
 
+  const setChartDataForActiveStock = useCallback(() => {
+    switch (activePeriodOfTime) {
+      case TimePeriod.fiveDays:
+        fetchChartData(5, selectedStock);
+        break;
+      case TimePeriod.Month:
+        fetchChartData(31, selectedStock);
+        break;
+      case TimePeriod.Year:
+        fetchChartData(365, selectedStock);
+        break;
+      case TimePeriod.Day:
+      default:
+        setData(
+          lastDayData.find((element) => element.name === selectedStock)
+            ?.chart ?? []
+        );
+        break;
+    }
+  }, [lastDayData, selectedStock]);
+
+  const fetchChartData = useCallback(
+    (days: number, symbol: string) =>
+      fetch(
+        `http://localhost:3000/api/stocks/date/?symbol=${symbol}&days=${days}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          return Promise.reject(response);
+        })
+        .then((json) => {
+          setData(json.historicalDate);
+        })
+        .catch((errorResponse) => {
+          errorResponse.json().then((errorJson: { message: string }) => {
+            console.error(errorJson.message);
+          });
+        }),
+    []
+  );
+
+  const [data, setData] = useState<ChartPoint[]>([]);
+
+  useEffect(() => {
+    setChartDataForActiveStock();
+  }, [selectedStock, lastDayData]);
+
   const handleTimePeriodChange = (timePeriod: TimePeriod) => {
     setActivePeriodOfTime(timePeriod);
+    switch (timePeriod) {
+      case TimePeriod.Day:
+        setData(
+          lastDayData.find((element) => element.name === selectedStock)
+            ?.chart ?? []
+        );
+        break;
+      case TimePeriod.fiveDays:
+        setData([]);
+        fetchChartData(5, selectedStock);
+        break;
+      case TimePeriod.Month:
+        setData([]);
+        fetchChartData(31, selectedStock);
+        break;
+      case TimePeriod.Year:
+        setData([]);
+        fetchChartData(365, selectedStock);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -110,28 +166,36 @@ export const StockChart = () => {
               1y
             </Button>
           </ButtonGroup>
-          <ResponsiveContainer width="100%" height="70%">
-            <LineChart
-              width={500}
-              height={300}
-              data={data}
-              margin={{
-                top: 50,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="name" />
-              <YAxis
-                orientation="right"
-                label={{ value: "USD", position: "top", offset: 20 }}
-              />
-              <Tooltip />
-              <Line type="monotone" dataKey="pv" stroke="#6CB8D6" dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
+          <Skeleton width="100%" height="70%" isLoaded={data.length > 0}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                width={500}
+                height={300}
+                data={data}
+                margin={{
+                  top: 50,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="dateTime" minTickGap={20} />
+                <YAxis
+                  orientation="right"
+                  label={{ value: "USD", position: "top", offset: 20 }}
+                  domain={["dataMin", "dataMax"]}
+                />
+                <Tooltip labelStyle={{ color: "black" }} />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#6CB8D6"
+                  dot={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Skeleton>
           <Flex height="10%" gap="50px" marginTop="7%">
             <Input
               type="number"

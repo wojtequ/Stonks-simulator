@@ -1,155 +1,71 @@
-import { Box, Flex, HStack, Image, Text, VStack } from "@chakra-ui/react";
-import { useState } from "react";
-import { Line, LineChart } from "recharts";
+import {
+  Box,
+  Flex,
+  HStack,
+  Image,
+  Skeleton,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { Line, LineChart, YAxis } from "recharts";
 import { t } from "../translations/utils";
+import { ChartData, StockInfo } from "./views/TransactionsPage";
 
-const data = [
-  {
-    pv: 2400,
-  },
-  {
-    pv: 1398,
-  },
-  {
-    pv: 9800,
-  },
-  {
-    pv: 3908,
-  },
-  {
-    pv: 4800,
-  },
-  {
-    pv: 3800,
-  },
-  {
-    pv: 4300,
-  },
-];
-
-const stocks: Stock[] = [
-  {
-    image:
-      "https://www.freepnglogos.com/uploads/apple-logo-png/file-apple-logo-black-svg-wikimedia-commons-1.png",
-    shortcut: "AAPL",
-    stockName: "Apple Inc.",
-    price: 120,
-    percentage: 2.5,
-    chart: data,
-  },
-  {
-    image:
-      "https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png",
-    shortcut: "GOOG",
-    stockName: "Google",
-    price: 100,
-    percentage: 1.5,
-    chart: data,
-  },
-  {
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tesla_T_symbol.svg/255px-Tesla_T_symbol.svg.png?20170327222004",
-    shortcut: "TSLA",
-    stockName: "Tesla",
-    price: 200,
-    percentage: 4.5,
-    chart: data,
-  },
-  {
-    image:
-      "https://www.freepnglogos.com/uploads/apple-logo-png/file-apple-logo-black-svg-wikimedia-commons-1.png",
-    shortcut: "AAPL",
-    stockName: "Apple Inc.",
-    price: 120,
-    percentage: 2.5,
-    chart: data,
-  },
-  {
-    image:
-      "https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png",
-    shortcut: "GOOG",
-    stockName: "Google",
-    price: 100,
-    percentage: 1.5,
-    chart: data,
-  },
-  {
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tesla_T_symbol.svg/255px-Tesla_T_symbol.svg.png?20170327222004",
-    shortcut: "TSLA",
-    stockName: "Tesla",
-    price: 200,
-    percentage: 4.5,
-    chart: data,
-  },
-  {
-    image:
-      "https://www.freepnglogos.com/uploads/apple-logo-png/file-apple-logo-black-svg-wikimedia-commons-1.png",
-    shortcut: "AAPL",
-    stockName: "Apple Inc.",
-    price: 120,
-    percentage: 2.5,
-    chart: data,
-  },
-  {
-    image:
-      "https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png",
-    shortcut: "GOOG",
-    stockName: "Google",
-    price: 100,
-    percentage: 1.5,
-    chart: data,
-  },
-  {
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tesla_T_symbol.svg/255px-Tesla_T_symbol.svg.png?20170327222004",
-    shortcut: "TSLA",
-    stockName: "Tesla",
-    price: 200,
-    percentage: 4.5,
-    chart: data,
-  },
-  {
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tesla_T_symbol.svg/255px-Tesla_T_symbol.svg.png?20170327222004",
-    shortcut: "TSLA",
-    stockName: "Tesla",
-    price: 200.76,
-    percentage: 4.5,
-    chart: data,
-  },
-];
-
-type ChartPointView = {
-  pv: number;
+const companiesLogos = {
+  GOOG: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Alphabet_Inc_Logo_2015.svg/320px-Alphabet_Inc_Logo_2015.svg.png",
+  TSLA: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Tesla_logo.png/240px-Tesla_logo.png",
+  TBLA: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Taboola_logo.svg/320px-Taboola_logo.svg.png",
+  AMZN: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/320px-Amazon_logo.svg.png",
+  AAPL: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/195px-Apple_logo_black.svg.png",
+  AMD: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/AMD_Logo.svg/320px-AMD_Logo.svg.png",
+  SOFI: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/SoFi_logo.svg/320px-SoFi_logo.svg.png",
+  PDD: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Pinduoduologo.png/320px-Pinduoduologo.png",
+  NVDA: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Nvidia_logo.svg/320px-Nvidia_logo.svg.png",
+  IQ: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/IQiyi_logo.svg/320px-IQiyi_logo.svg.png",
 };
 
-type Stock = {
-  image: string;
-  shortcut: string;
-  stockName: string;
-  price: number;
-  percentage: number;
-  chart: ChartPointView[];
+const getCompanyLogo = (nameShortcut: string) => {
+  switch (nameShortcut) {
+    case "GOOG":
+      return companiesLogos.GOOG;
+    case "TSLA":
+      return companiesLogos.TSLA;
+    case "TBLA":
+      return companiesLogos.TBLA;
+    case "AMZN":
+      return companiesLogos.AMZN;
+    case "AAPL":
+      return companiesLogos.AAPL;
+    case "AMD":
+      return companiesLogos.AMD;
+    case "SOFI":
+      return companiesLogos.SOFI;
+    case "PDD":
+      return companiesLogos.PDD;
+    case "NVDA":
+      return companiesLogos.NVDA;
+    case "IQ":
+      return companiesLogos.IQ;
+    default:
+      return "NO LOGO";
+  }
 };
 
 type RadioCardProps = {
-  image: string;
-  shortcut: string;
-  stockName: string;
-  price: number;
-  percentage: number;
+  symbol: string;
+  companyName: string;
+  lastSalePrice: string;
+  percentageChange: string;
   chart: any;
   isSelected: boolean;
   stockChange: (stockShortcut: string) => void;
 };
 
 export const RadioCard: React.FC<RadioCardProps> = ({
-  image,
-  shortcut,
-  stockName,
-  price,
-  percentage,
+  symbol,
+  companyName,
+  lastSalePrice,
+  percentageChange,
   chart,
   isSelected,
   stockChange,
@@ -172,16 +88,16 @@ export const RadioCard: React.FC<RadioCardProps> = ({
       px={3}
       py={4}
       onClick={() => {
-        stockChange(shortcut);
+        stockChange(symbol);
       }}
     >
-      <HStack spacing={5} justifyContent='space-between'>
-        <Image src={image} w="39px" h="39px" />
-        <Box width='55px'>
+      <HStack spacing={5} justifyContent="space-between">
+        <Image src={getCompanyLogo(symbol)} w="39px" h="39px" />
+        <Box width="55px">
           <VStack display="block" float="left">
-            <Text fontSize="12px">{shortcut}</Text>
+            <Text fontSize="12px">{symbol}</Text>
             <Text fontSize="12px" color="#6D6D6D">
-              {stockName}
+              {companyName}
             </Text>
           </VStack>
         </Box>
@@ -189,10 +105,11 @@ export const RadioCard: React.FC<RadioCardProps> = ({
           <LineChart width={99} height={50} data={chart}>
             <Line
               type="monotone"
-              dataKey="pv"
+              dataKey="value"
               stroke="#6CB8D6"
               dot={false}
             />
+            <YAxis hide domain={["dataMin", "dataMax"]} type="number" />
           </LineChart>
         </Box>
         <Box>
@@ -203,10 +120,10 @@ export const RadioCard: React.FC<RadioCardProps> = ({
             textAlign="right"
           >
             <Text fontSize="16px" color="#139602">
-              {`${percentage}%`}
+              {percentageChange}
             </Text>
             <Text fontSize="16px" fontWeight="bold">
-              {`${price}$`}
+              {lastSalePrice}
             </Text>
             <Text fontSize="12px" color="#6D6D6D">
               {t("stock.price")}
@@ -218,34 +135,51 @@ export const RadioCard: React.FC<RadioCardProps> = ({
   );
 };
 
-export const StocksList = () => {
-  const [selectedStock, setSelectedStock] = useState<string>(
-    stocks[0].shortcut
-  );
+type StocksListProps = {
+  stocks: StockInfo[];
+  lastDayData: ChartData[];
+  selectedStock: string;
+  setSelectedStock: (symbol: string) => void;
+};
 
+export const StocksList: React.FC<StocksListProps> = ({
+  stocks,
+  lastDayData,
+  selectedStock,
+  setSelectedStock,
+}) => {
   return (
-    <Flex
-      direction={"column"}
-      gap={"6px"}
-      width={"fit-content"}
-      //   maxWidth={"40%"}
-      //height that small for scroll tests
-      height={"420px"}
-      overflow={"auto"}
-      background={"#1782FF"}
-      padding="12px"
-      borderRadius={"15px"}
+    <Skeleton
+      width="400px"
+      isLoaded={stocks.length > 0 && lastDayData.length > 0}
     >
-      {stocks.map((stock) => {
-        return (
-          <RadioCard
-            key={stock.shortcut}
-            {...stock}
-            isSelected={selectedStock === stock.shortcut}
-            stockChange={setSelectedStock}
-          ></RadioCard>
-        );
-      })}
-    </Flex>
+      <Flex
+        direction={"column"}
+        gap={"6px"}
+        width={"fit-content"}
+        //height that small for scroll tests
+        height={"420px"}
+        overflow={"auto"}
+        background={"#1782FF"}
+        padding="12px"
+        borderRadius={"15px"}
+      >
+        {stocks.map((stock) => {
+          return (
+            <RadioCard
+              //temp
+              chart={
+                lastDayData.find((element) => element.name === stock.symbol)
+                  ?.chart
+              }
+              key={stock.symbol}
+              {...stock}
+              isSelected={selectedStock === stock.symbol}
+              stockChange={setSelectedStock}
+            ></RadioCard>
+          );
+        })}
+      </Flex>
+    </Skeleton>
   );
 };

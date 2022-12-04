@@ -1,10 +1,10 @@
 import { Center, Container, SimpleGrid, useToast } from "@chakra-ui/react";
 import { Fragment, useCallback, useState } from "react";
+import { t } from "../../translations/utils";
 import { AddFundsModal } from "../AddFundsModal";
 import { getJwtToken } from "../authorization/utils";
 import { BalanceCard } from "../BalanceCard";
 import { BalanceManagmentButtonGroup } from "../BalanceManagmentButtonGroup";
-import { t } from "../../translations/utils";
 
 export const HomePage = () => {
   const toast = useToast();
