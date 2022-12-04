@@ -226,6 +226,8 @@ app.get("/api/stocks/date/", async (req, res) => {
   }
 });
 
+
+
 app.put("/api/buy", auth, async (req, res) =>{
     const transactionCost = req.body.price*req.body.stockCount;
     const date = new Date()
@@ -263,6 +265,51 @@ app.put("/api/buy", auth, async (req, res) =>{
       return res.json({status: "ok created"});
     }
     
+});
+
+
+app.put("/api/sell", auth, async (req, res) =>{
+  
+  const filterUser = {userName: req.user.userName};
+  const transactionCost = req.body.stockCount*req.body.price
+  const user= await User.findOne(filterUser)
+  const date = new Date()
+  if(!companies.includes(req.body.stockName)){
+    return res.status(400).json({ message: "Invalid company" });
+  }
+
+  const stock = user.ownedStocks.find(element => element.stockName == req.body.stockName)
+  if(stock){
+    if (req.body.stockCount<=stock.stockCount) {
+      const updateBalance = await User.updateOne({_id: user._id,}, {$inc:{balance: transactionCost}})
+      const transactionData = {
+        transactionDate: date, 
+        stockName: req.body.stockName,
+        stockCount: req.body.stockCount,
+        buyOrSell: true,
+        transactionCost: transactionCost,
+        stockPrice: req.body.price
+      }
+      const updateTransactionHistory = await User.updateOne({_id: user._id}, {"$push": {"transactions": transactionData}})
+      if(req.body.stockCount==stock.stockCount){
+        const deleteStock = await User.updateOne({_id: user._id}, {$pull:{ownedStocks:{stockName:stock.stockName}}})
+        res.json({status: "ok"})
+
+      }
+      else{
+        const updateStocks = await User.updateOne({_id: user._id,"ownedStocks.stockName": stock.stockName}, { $inc: {
+          "ownedStocks.$.stockCount": -req.body.stockCount,
+       } })
+        res.json({status: "ok"})
+      }
+    }   
+   else
+   { res.status(400).json({message:"You don't have enough stocks"}) }
+  }
+  else{
+    return res.status(400).json({message:"No stocks found"})
+  }
+  
 });
 
 function auth(req, res, next) {
