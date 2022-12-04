@@ -72,7 +72,7 @@ export const HomePage = () => {
       <Center mt={10}>
         <Container maxW="2xl">
           <SimpleGrid
-            minChildWidth="312px"
+            minChildWidth="420px"
             columns={2}
             spacing={4}
             alignItems="center"

@@ -18,6 +18,7 @@ import {
   YAxis,
 } from "recharts";
 import { ChartData, ChartPoint } from "./views/TransactionsPage";
+import "./transactions_page.css";
 
 enum TimePeriod {
   Day = "oneDay",
@@ -126,8 +127,11 @@ export const StockChart: React.FC<StockChartProps> = ({
         background={"#1782FF"}
         padding="12px"
         borderRadius={"15px"}
-        width="500px"
-        height="480px"
+        // width="50%"
+        height="100%"
+        minW="390px"
+        minH="50vh"
+        className="transactions-page__card"
       >
         <Box
           background="white"
@@ -196,7 +200,7 @@ export const StockChart: React.FC<StockChartProps> = ({
               </LineChart>
             </ResponsiveContainer>
           </Skeleton>
-          <Flex height="10%" gap="50px" marginTop="7%">
+          <Flex height="10%" gap="50px" mt={30}>
             <Input
               type="number"
               color="black"

@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { StockChart } from "../StockChart";
 import { StocksList } from "../StocksList";
@@ -80,7 +80,13 @@ export const TransactionsPage = () => {
   const [lastDayData, setLastDayData] = useState<ChartData[]>([]);
 
   return (
-    <Flex padding={"30px"} gap="50px">
+    // <SimpleGrid
+    //   minChildWidth="399px"
+    //   columns={2}
+    //   spacing={4}
+    //   justifyContent="center"      
+    // >
+    <Flex mt={10} gap="50px" justifyContent="center" direction="row" height="50vh" flexWrap="wrap">
       <StocksList
         stocks={stocks}
         selectedStock={selectedStock}
@@ -89,5 +95,6 @@ export const TransactionsPage = () => {
       />
       <StockChart selectedStock={selectedStock} lastDayData={lastDayData} />
     </Flex>
+    // </SimpleGrid>
   );
 };
