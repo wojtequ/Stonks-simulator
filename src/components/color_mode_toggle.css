@@ -1,0 +1,27 @@
+.sun-icon {
+  animation: rotation 1s linear;
+}
+.moon-icon {
+  animation: click 0.7s linear 2;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(60deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes click {
+  from {
+    fill: none;
+  }
+  to {
+    fill: white;
+  }
+}

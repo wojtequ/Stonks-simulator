@@ -1,4 +1,3 @@
-import { InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   Button,
   FormControl,
@@ -14,14 +13,16 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Tooltip,
   UnorderedList,
   useToast,
 } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
+import { t } from "../../translations/utils";
+import { ErrorInfo } from "../ErrorInfo";
+import { VIEW_REDIRECT_TIMEOUT } from "../views/constants";
 import { DEBOUNCE_TIMEOUT } from "./constants";
-import { setJwtToken } from "./utils";
+import { setJwtToken, setUserNameInSessionStorage } from "./utils";
 
 type RegisterModalProps = {
   isOpen: boolean;
@@ -42,13 +43,21 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
   const passwordRulesList = useMemo(
     () => (
       <Fragment>
-        Password should meet this conditions:
+        {t("register.modal.password-rules.title")}
         <UnorderedList>
-          <ListItem>at least one upper case letter</ListItem>
-          <ListItem>at least one lower case letter</ListItem>
-          <ListItem>at least one digit</ListItem>
-          <ListItem>at least one special character</ListItem>
-          <ListItem>minimum 8 characters</ListItem>
+          <ListItem>
+            {t("register.modal.password-rules.upper-case-letter")}
+          </ListItem>
+          <ListItem>
+            {t("register.modal.password-rules.lower-case-letter")}
+          </ListItem>
+          <ListItem>{t("register.modal.password-rules.digit")}</ListItem>
+          <ListItem>
+            {t("register.modal.password-rules.special-character")}
+          </ListItem>
+          <ListItem>
+            {t("register.modal.password-rules.min-characters")}
+          </ListItem>
         </UnorderedList>
       </Fragment>
     ),
@@ -106,18 +115,18 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         return Promise.reject(response);
       })
       .then((json) => {
+        setUserNameInSessionStorage(json.userName);
         setJwtToken(json.token);
         toast({
-          title: "Registration succesfully",
-          description:
-            "You are logged in, you will be redirected to home page in a few seconds",
+          title: t("toast.registration.title.success"),
+          description: t("toast.login-success-description"),
           status: "success",
-          duration: 5000,
+          duration: VIEW_REDIRECT_TIMEOUT,
           isClosable: true,
         });
         setTimeout(() => {
           window.location.reload();
-        }, 5000);
+        }, VIEW_REDIRECT_TIMEOUT);
         handleClose();
       })
       .catch((response) => {
@@ -125,9 +134,9 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
           if (json.message === "user already exists") {
             setUserNameError(true);
             toast({
-              title: "User already exists",
+              title: t("toast.registration.title.error"),
               status: "error",
-              duration: 5000,
+              duration: VIEW_REDIRECT_TIMEOUT,
               isClosable: true,
             });
           }
@@ -153,30 +162,31 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create your account</ModalHeader>
+        <ModalHeader>{t("register.modal.title")}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
-            <FormLabel>User Name</FormLabel>
+            <FormLabel>
+              {t("user-name")}{" "}
+              {userNameError && (
+                <ErrorInfo label={t("register.modal.username-error")} />
+              )}
+            </FormLabel>
             <Input
-              placeholder="User Name"
+              placeholder={t("user-name")}
               isInvalid={userNameError}
               onChange={(e) => handleUserNameChange(e.target.value)}
             />
           </FormControl>
           <FormControl>
             <FormLabel>
-              Password{" "}
-              {passwordError && (
-                <Tooltip hasArrow label={passwordRulesList} fontSize="md">
-                  <InfoOutlineIcon color={"Red"} />
-                </Tooltip>
-              )}
+              {t("password")}{" "}
+              {passwordError && <ErrorInfo label={passwordRulesList} />}
             </FormLabel>
             <InputGroup>
               <Input
                 type={isPasswordVisible ? "text" : "password"}
-                placeholder="Enter password"
+                placeholder={t("password-placeholder")}
                 isInvalid={passwordError}
                 onChange={(e) => handlePasswordChange(e.target.value)}
               />
@@ -186,7 +196,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                   size="sm"
                   onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                 >
-                  {isPasswordVisible ? "Hide" : "Show"}
+                  {isPasswordVisible ? t("password-hide") : t("password-show")}
                 </Button>
               </InputRightElement>
             </InputGroup>
@@ -199,7 +209,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
             disabled={!isFormValid}
             style={{ width: "100%" }}
           >
-            Create Account
+            {t("register.modal.create-account")}
           </Button>
         </ModalFooter>
       </ModalContent>
