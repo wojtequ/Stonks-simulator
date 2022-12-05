@@ -39,7 +39,7 @@ export const AddBallanceCard: React.FC<AddBallanceCardProps> = ({
               {ballance.toFixed(2)}
             </Text>
             <Text paddingLeft="5px" color="white">
-              PLN
+              USD
             </Text>
           </Flex>
           <Text color="white">{t("add-funds.modal.card.after-add")}</Text>
@@ -61,7 +61,7 @@ export const AddBallanceCard: React.FC<AddBallanceCardProps> = ({
               {newBallance.toFixed(2)}
             </Text>
             <Text paddingLeft="5px" color="white" fontSize="xl">
-              PLN
+              USD
             </Text>
           </Flex>
         </Box>

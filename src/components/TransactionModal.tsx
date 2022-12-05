@@ -1,19 +1,18 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Flex,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Input,
   SimpleGrid,
-  LightMode,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { t } from "../translations/utils";
+import React from "react";
 import { AddBallanceCard } from "./AddBallanceCard";
 
 type TransactionModalProps = {
@@ -55,12 +54,33 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             <Box justifySelf="center" maxW="sm" minW="310px">
               <Flex direction={"column"}>
                 <Input
-                  _placeholder={{ color: "black", fontWeight: "bold" }}
+                  _placeholder={{ color: "gray", fontWeight: "bold" }}
                   type="text"
                   placeholder={`Are you sure to transfer ${String(auctions)}$?`}
                   disabled={true}
                 />
-                <Button
+                <ButtonGroup justifyContent={"center"} mt="20px">
+                  <Button
+                    size="lg"
+                    colorScheme={"whatsapp"}
+                    onClick={() => {
+                      onSubmit();
+                      onClose();
+                    }}
+                  >
+                    Ok
+                  </Button>
+                  <Button
+                    size="lg"
+                    colorScheme={"red"}
+                    onClick={() => {
+                      onClose();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </ButtonGroup>
+                {/* <Button
                   colorScheme="blue"
                   width="100%"
                   marginTop="10%"
@@ -68,9 +88,9 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     onSubmit();
                     onClose();
                   }}
-                >
-                  {t("add-funds.modal.add-button")}
-                </Button>
+                > */}
+                {/* {t("add-funds.modal.add-button")}
+                </Button> */}
               </Flex>
             </Box>
             <AddBallanceCard

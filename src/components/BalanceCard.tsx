@@ -25,7 +25,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({ balance }) => {
                 {balance.toFixed(2)}
               </Text>
               <Text paddingLeft="5px" fontSize="xl" color="white">
-                PLN
+                USD
               </Text>
             </Flex>
           </Box>
@@ -38,7 +38,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({ balance }) => {
                 247.53
               </Text>
               <Text paddingLeft="5px" color="white">
-                PLN
+                USD
               </Text>
             </Flex>
           </Box>
