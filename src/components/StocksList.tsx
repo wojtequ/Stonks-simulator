@@ -4,6 +4,9 @@ import {
   HStack,
   Image,
   Skeleton,
+  Stat,
+  StatArrow,
+  StatHelpText,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -57,6 +60,7 @@ type RadioCardProps = {
   companyName: string;
   lastSalePrice: string;
   percentageChange: string;
+  deltaIndicator: string;
   chart: any;
   isSelected: boolean;
   stockChange: (stockShortcut: string) => void;
@@ -67,6 +71,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
   companyName,
   lastSalePrice,
   percentageChange,
+  deltaIndicator,
   chart,
   isSelected,
   stockChange,
@@ -75,7 +80,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
     <Box
       cursor="pointer"
       width={"100%"}
-      // maxW="356px" 
+      // maxW="356px"
       minW="290px"
       color="black"
       borderWidth="2px"
@@ -97,7 +102,12 @@ export const RadioCard: React.FC<RadioCardProps> = ({
         <Box width="55px" overflow={"hidden"}>
           <VStack display="block" float="left">
             <Text fontSize="12px">{symbol}</Text>
-            <Text fontSize="12px" color="#6D6D6D" whiteSpace={"nowrap"} className="stock-list__animated-text">
+            <Text
+              fontSize="12px"
+              color="#6D6D6D"
+              whiteSpace={"nowrap"}
+              className="stock-list__animated-text"
+            >
               {companyName}
             </Text>
           </VStack>
@@ -120,11 +130,28 @@ export const RadioCard: React.FC<RadioCardProps> = ({
             float="right"
             textAlign="right"
           >
-            <Text fontSize="16px" color="#139602">
-              {percentageChange}
-            </Text>
+            <Flex direction="row">
+              {deltaIndicator === "up" ? (
+                <Text fontSize="16px" color="#139602">
+                  {percentageChange}
+                </Text>
+              ) : (
+                <Text fontSize="16px" color="red">
+                  {percentageChange}
+                </Text>
+              )}
+              <Stat>
+                <StatHelpText>
+                  {deltaIndicator === "up" ? (
+                    <StatArrow type="increase" />
+                  ) : (
+                    <StatArrow type="decrease" />
+                  )}
+                </StatHelpText>
+              </Stat>
+            </Flex>
             <Text fontSize="16px" fontWeight="bold">
-              {lastSalePrice}
+              ${lastSalePrice}
             </Text>
             <Text fontSize="12px" color="#6D6D6D">
               {t("stock.price")}
@@ -165,7 +192,6 @@ export const StocksList: React.FC<StocksListProps> = ({
         background={"#1782FF"}
         padding="12px"
         borderRadius={"15px"}
-
       >
         {stocks.map((stock) => {
           return (

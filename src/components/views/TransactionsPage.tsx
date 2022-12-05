@@ -84,16 +84,27 @@ export const TransactionsPage = () => {
     //   minChildWidth="399px"
     //   columns={2}
     //   spacing={4}
-    //   justifyContent="center"      
+    //   justifyContent="center"
     // >
-    <Flex mt={10} gap="50px" justifyContent="center" direction="row" height="50vh" flexWrap="wrap">
+    <Flex
+      mt={10}
+      gap="50px"
+      justifyContent="center"
+      direction="row"
+      height="50vh"
+      flexWrap="wrap"
+    >
       <StocksList
         stocks={stocks}
         selectedStock={selectedStock}
         setSelectedStock={setSelectedStock}
         lastDayData={lastDayData}
       />
-      <StockChart selectedStock={selectedStock} lastDayData={lastDayData} />
+      <StockChart
+        selectedStock={selectedStock}
+        stocks={stocks}
+        lastDayData={lastDayData}
+      />
     </Flex>
     // </SimpleGrid>
   );

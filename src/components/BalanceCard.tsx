@@ -22,7 +22,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({ balance }) => {
             <Text color="white">{t("total-balance")}</Text>
             <Flex alignItems="baseline">
               <Text color="white" fontSize="4xl">
-                {balance}
+                {balance.toFixed(2)}
               </Text>
               <Text paddingLeft="5px" fontSize="xl" color="white">
                 PLN

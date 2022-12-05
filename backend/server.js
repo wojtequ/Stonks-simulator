@@ -145,7 +145,9 @@ app.get("/api/stocks/realtime", async (req, res) => {
         const object = {
           symbol: response.data.data[i].symbol,
           companyName: response.data.data[i].companyName,
-          lastSalePrice: response.data.data[i].lastSalePrice,
+          lastSalePrice: response.data.data[i].lastSalePrice
+            ? Number(response.data.data[i].lastSalePrice.slice(1)).toFixed(2)
+            : "",
           percentageChange: response.data.data[i].percentageChange,
           deltaIndicator: response.data.data[i].deltaIndicator,
         };

@@ -36,7 +36,7 @@ export const AddBallanceCard: React.FC<AddBallanceCardProps> = ({
             marginBottom={"1.5rem"}
           >
             <Text color="white" fontSize="3xl">
-              {ballance}
+              {ballance.toFixed(2)}
             </Text>
             <Text paddingLeft="5px" color="white">
               PLN
@@ -58,7 +58,7 @@ export const AddBallanceCard: React.FC<AddBallanceCardProps> = ({
               overflowX="auto"
               whiteSpace={"nowrap"}
             >
-              {newBallance}
+              {newBallance.toFixed(2)}
             </Text>
             <Text paddingLeft="5px" color="white" fontSize="xl">
               PLN
