@@ -229,111 +229,109 @@ app.get("/api/stocks/date/", async (req, res) => {
   }
 });
 
-app.put("/api/buy", auth, async (req, res) => {
-  const transactionCost = req.body.price * req.body.stockCount;
-  const date = new Date();
-  const filterUser = { userName: req.user.userName };
-  const user = await User.findOne(filterUser);
-  if (!companies.includes(req.body.stockName)) {
-    return res.status(400).json({ message: "Invalid company" });
-  }
-  if (transactionCost > user.balance) {
-    return res.status(400).json({ message: "Insufficient funds" });
-  }
-  const updateBalance = await User.updateOne(
-    { _id: user._id },
-    { $inc: { balance: -transactionCost } }
-  );
 
-  const transactionData = {
-    transactionDate: date,
-    stockName: req.body.stockName,
-    stockCount: req.body.stockCount,
-    buyOrSell: false,
-    transactionCost: transactionCost,
-    stockPrice: req.body.price,
-  };
 
-  const updateTransactionHistory = await User.updateOne(
-    { _id: user._id },
-    { $push: { transactions: transactionData } }
-  );
-  var stock = user.ownedStocks.find(
-    (element) => element.stockName == req.body.stockName
-  );
-  if (stock) {
-    const updatedstock = await User.updateOne(
-      { _id: user._id, "ownedStocks.stockName": stock.stockName },
-      {
-        $inc: {
-          "ownedStocks.$.stockCount": req.body.stockCount,
-        },
-      }
-    );
-    return res.json({ status: "ok" });
-  } else {
-    const itemBought = {
+
+app.put("/api/buy", auth, async (req, res) =>{
+    if(req.body.price==null || req.body.stockCount==null){
+      return res.status(400).json({message: "Stock count or pice not provided"})
+    }
+    const transactionCost = req.body.price*req.body.stockCount;
+    const date = new Date()
+    const filterUser = {userName: req.user.userName};
+    const user= await User.findOne(filterUser)
+    if(!companies.includes(req.body.stockName)){
+      return res.status(400).json({ message: "Invalid company" });
+    }
+    if(transactionCost > user.balance){
+      return res.status(400).json({ message: "Insufficient funds" });
+    }
+    const updateBalance = await User.updateOne({_id: user._id,}, {$inc:{balance: -transactionCost}})
+    
+    const transactionData = {
+      transactionDate: date, 
       stockName: req.body.stockName,
       stockCount: req.body.stockCount,
-    };
-    const update = { $push: { ownedStocks: itemBought } };
-    const newstock = await User.updateOne({ _id: user._id }, update);
-    return res.json({ status: "ok created" });
-  }
+      buyOrSell: false,
+      transactionCost: transactionCost,
+      stockPrice: req.body.price
+    }
+  
+    const updateTransactionHistory = await User.updateOne({_id: user._id}, {"$push": {"transactions": transactionData}})
+    var stock = user.ownedStocks.find(element => element.stockName == req.body.stockName)
+    if(stock){
+      const updatedstock = await User.updateOne({ _id: user._id, "ownedStocks.stockName": stock.stockName },{ $inc: {
+        "ownedStocks.$.stockCount": req.body.stockCount,
+     } })
+      return res.json({status: "ok"});
+    }
+    else{
+      const itemBought = {stockName: req.body.stockName, stockCount:req.body.stockCount}
+      const update = {"$push": {"ownedStocks": itemBought}}
+      const newstock = await User.updateOne({ _id: user._id}, update)
+      return res.json({status: "ok created"});
+    }
+    
 });
 
-app.put("/api/sell", auth, async (req, res) => {
-  const filterUser = { userName: req.user.userName };
-  const transactionCost = req.body.stockCount * req.body.price;
-  const user = await User.findOne(filterUser);
-  const date = new Date();
-  if (!companies.includes(req.body.stockName)) {
+
+app.put("/api/sell", auth, async (req, res) =>{
+  if(req.body.price==null || req.body.stockCount==null){
+    return res.status(400).json({message: "Stock count or pice not provided"})
+  }
+  const filterUser = {userName: req.user.userName};
+  const transactionCost = req.body.stockCount*req.body.price
+  const user= await User.findOne(filterUser)
+  const date = new Date()
+  if(!companies.includes(req.body.stockName)){
     return res.status(400).json({ message: "Invalid company" });
   }
 
-  const stock = user.ownedStocks.find(
-    (element) => element.stockName == req.body.stockName
-  );
-  if (stock) {
-    if (req.body.stockCount <= stock.stockCount) {
-      const updateBalance = await User.updateOne(
-        { _id: user._id },
-        { $inc: { balance: transactionCost } }
-      );
+  const stock = user.ownedStocks.find(element => element.stockName == req.body.stockName)
+  if(stock){
+    if (req.body.stockCount<=stock.stockCount) {
+      const updateBalance = await User.updateOne({_id: user._id,}, {$inc:{balance: transactionCost}})
       const transactionData = {
-        transactionDate: date,
+        transactionDate: date, 
         stockName: req.body.stockName,
         stockCount: req.body.stockCount,
         buyOrSell: true,
         transactionCost: transactionCost,
-        stockPrice: req.body.price,
-      };
-      const updateTransactionHistory = await User.updateOne(
-        { _id: user._id },
-        { $push: { transactions: transactionData } }
-      );
-      if (req.body.stockCount == stock.stockCount) {
-        const deleteStock = await User.updateOne(
-          { _id: user._id },
-          { $pull: { ownedStocks: { stockName: stock.stockName } } }
-        );
-        res.json({ status: "ok" });
-      } else {
-        const updateStocks = await User.updateOne(
-          { _id: user._id, "ownedStocks.stockName": stock.stockName },
-          {
-            $inc: {
-              "ownedStocks.$.stockCount": -req.body.stockCount,
-            },
-          }
-        );
-        res.json({ status: "ok" });
+        stockPrice: req.body.price
       }
-    } else {
-      res.status(400).json({ message: "You don't have enough stocks" });
+      const updateTransactionHistory = await User.updateOne({_id: user._id}, {"$push": {"transactions": transactionData}})
+      if(req.body.stockCount==stock.stockCount){
+        const deleteStock = await User.updateOne({_id: user._id}, {$pull:{ownedStocks:{stockName:stock.stockName}}})
+        res.json({status: "ok"})
+
+      }
+      else{
+        const updateStocks = await User.updateOne({_id: user._id,"ownedStocks.stockName": stock.stockName}, { $inc: {
+          "ownedStocks.$.stockCount": -req.body.stockCount,
+       } })
+        res.json({status: "ok"})
+      }
+    }   
+   else
+   { res.status(400).json({message:"You don't have enough stocks"}) }
+  }
+  else{
+    return res.status(400).json({message:"No stocks found"})
+  }
+  
+});
+
+app.get("/api/usersStocks", auth, async (req, res) => {
+  try {
+    const filter = { userName: req.user.userName };
+    const user = await User.findOne(filter);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
     }
-  } else {
-    return res.status(400).json({ message: "No stocks found" });
+    return res.json({ status: "ok", stocks: user.ownedStocks });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "Invalid request" });
   }
 });
 
