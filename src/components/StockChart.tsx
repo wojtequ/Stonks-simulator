@@ -8,7 +8,7 @@ import {
   Skeleton,
   useToast,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState, Fragment, useRef } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -18,12 +18,11 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { getJwtToken } from "./authorization/utils";
-import { ChartData, ChartPoint, StockInfo } from "./views/TransactionsPage";
-import "./transactions_page.css";
-import { TransactionModal } from "./TransactionModal";
 import { t } from "../translations/utils";
-import { totalmem } from "os";
+import { getJwtToken } from "./authorization/utils";
+import { TransactionModal } from "./TransactionModal";
+import "./transactions_page.css";
+import { ChartData, ChartPoint, StockInfo } from "./views/TransactionsPage";
 
 enum TimePeriod {
   Day = "oneDay",

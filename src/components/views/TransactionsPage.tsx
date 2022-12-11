@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { OwnedStocksCard } from "../OwnedStocksCard";
 import { StockChart } from "../StockChart";
 import { StocksList } from "../StocksList";
 
@@ -57,7 +58,12 @@ export const TransactionsPage = () => {
         return Promise.reject(response);
       })
       .then((json) => {
-        setLastDayData(json.chartData);
+        // temporary reverse data from last day for proper display of chart
+        const reversedData = json.chartData.map((data: ChartData) => {
+          return { ...data, chart: [...data.chart].reverse() };
+        });
+        setLastDayData(reversedData);
+        // setLastDayData(json.chartData);
       })
       .catch((errorResponse) => {
         errorResponse.json().then((errorJson: { message: string }) => {
@@ -82,8 +88,9 @@ export const TransactionsPage = () => {
   return (
     <Flex
       mt={10}
+      ml={10}
       gap="50px"
-      justifyContent="center"
+      // justifyContent="center"
       direction="row"
       height="50vh"
       flexWrap="wrap"
@@ -99,6 +106,7 @@ export const TransactionsPage = () => {
         stocks={stocks}
         lastDayData={lastDayData}
       />
+      <OwnedStocksCard />
     </Flex>
   );
 };
