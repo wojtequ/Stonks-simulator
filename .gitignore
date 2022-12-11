@@ -7,6 +7,7 @@ rest.rest
 /.pnp
 .pnp.js
 .idea
+.vscode
 
 # testing
 /coverage

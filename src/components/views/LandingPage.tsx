@@ -1,18 +1,25 @@
-import React, { Fragment, useState } from "react";
 import {
+  Box,
   Button,
+  ButtonGroup,
   Center,
-  Text,
-  VStack,
   Highlight,
   Image,
-  Box,
-  ButtonGroup,
+  Text,
+  useColorMode,
+  VStack,
 } from "@chakra-ui/react";
-import { LoginModal } from "./authorization/LoginModal";
-import { RegisterModal } from "./authorization/RegisterModal";
+import { Fragment, useState } from "react";
+import { LanguageSelect } from "../../translations/LanguageSelect";
+import { getActiveLanguage, Language, t } from "../../translations/utils";
+import { LoginModal } from "../authorization/LoginModal";
+import { RegisterModal } from "../authorization/RegisterModal";
+import { isMobile } from "../authorization/utils";
+import "./landing_page.css";
 
 export const LandingPage = () => {
+  const { colorMode } = useColorMode();
+
   const [isRegisterModalOpened, setIsRegisterModalOpened] =
     useState<boolean>(false);
 
@@ -28,6 +35,7 @@ export const LandingPage = () => {
 
   return (
     <Fragment>
+      <LanguageSelect />
       <Center mt={10}>
         <VStack>
           <Text fontSize="4xl" fontWeight="bold" color="green">
@@ -43,18 +51,27 @@ export const LandingPage = () => {
               boxSize="250px"
             />
           </Box>
-          <Text fontSize="2xl">Stock market investment simulator</Text>
+          <Text
+            className={`landing-page__description ${
+              getActiveLanguage() === Language.English
+                ? "english-language"
+                : "polish-language"
+            } ${colorMode === "dark" ? "dark-mode" : "light-mode"}`}
+            fontSize={isMobile() ? "xl" : "5xl"}
+          >
+            {t("landingPage.description")}
+          </Text>
           <div>
             <Fragment>
               <ButtonGroup gap="2">
                 <Button onClick={() => setIsRegisterModalOpened(true)}>
-                  Register
+                  {t("register")}
                 </Button>
                 <Button
                   colorScheme="green"
                   onClick={() => setIsLoginModalOpened(true)}
                 >
-                  Login
+                  {t("login")}
                 </Button>
               </ButtonGroup>
               <RegisterModal

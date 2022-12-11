@@ -1,4 +1,3 @@
-import { InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   Button,
   FormControl,
@@ -13,14 +12,15 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Tooltip,
   useToast,
 } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import React, { useEffect, useState } from "react";
+import { t } from "../../translations/utils";
+import { ErrorInfo } from "../ErrorInfo";
+import { VIEW_REDIRECT_TIMEOUT } from "../views/constants";
 import { DEBOUNCE_TIMEOUT } from "./constants";
-import {setJwtToken} from "./utils";
-
+import { setJwtToken, setUserNameInSessionStorage } from "./utils";
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -33,7 +33,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   onClose,
   onSave,
 }) => {
-
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
   const [userName, setUserName] = useState<string>("");
   const [userNameError, setUserNameError] = useState<boolean>(false);
@@ -42,7 +41,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    userNameError || passwordError ? setIsFormValid(false) : setIsFormValid(true);
+    userNameError || passwordError
+      ? setIsFormValid(false)
+      : setIsFormValid(true);
   }, [userNameError, passwordError]);
 
   const handleUserNameChange = debounce((userName: string) => {
@@ -57,56 +58,58 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   const toast = useToast();
 
-  const handleSave = () =>
-  {
+  const handleSave = () => {
     fetch("http://localhost:3000/api/login", {
       method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userName, password }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userName, password }),
     })
-        .then((response) => {
-          if(response.ok)
-          {
-            return response.json();
-          }
-          return Promise.reject(response);
-        })
-        .then((json) => {
-            setJwtToken(json.token);
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject(response);
+      })
+      .then((json) => {
+        setJwtToken(json.token);
+        setUserNameInSessionStorage(json.userName);
+        toast({
+          title: t("toast.login.title.success"),
+          description: t("toast.login-success-description"),
+          status: "success",
+          duration: VIEW_REDIRECT_TIMEOUT,
+          isClosable: true,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, VIEW_REDIRECT_TIMEOUT);
+        handleClose();
+      })
+      .catch((response) => {
+        response.json().then((json: { message: string }) => {
+          if (json.message === "User not found") {
             toast({
-                title: "Login succesfully",
-                description: "You are logged in, you will be redirected to home page in a few seconds",
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-            });
-            setTimeout(() => {
-              window.location.reload();
-            },5000);
-            handleClose();
-
-        })
-        .catch((response) => {
-          response.json().then((json: {message: string}) => {
-            if(json.message === "User not found")
-            {
-              setUserNameError(true)
-            }else if(json.message === "Wrong password")
-            {
-                setPasswordError(true);
-            }
-
-            toast({
-              title: "Login failed",
-              description: json.message,
+              title: t("toast.login.title.error"),
+              description: t("toast.login-error-description"),
               status: "error",
-              duration: 5000,
+              duration: VIEW_REDIRECT_TIMEOUT,
               isClosable: true,
             });
-          });
+            setUserNameError(true);
+          } else if (json.message === "Wrong password") {
+            toast({
+              title: t("toast.login.title.error"),
+              description: t("login.modal.password-error"),
+              status: "error",
+              duration: VIEW_REDIRECT_TIMEOUT,
+              isClosable: true,
+            });
+            setPasswordError(true);
+          }
         });
+      });
   };
 
   const handleClose = () => {
@@ -126,34 +129,28 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Log in to your account</ModalHeader>
+        <ModalHeader>{t("login.modal.title")}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
-            <FormLabel>User Name</FormLabel>
+            <FormLabel>{t("user-name")}</FormLabel>
             <Input
-              placeholder="User Name"
+              placeholder={t("user-name")}
               isInvalid={userNameError}
               onChange={(e) => handleUserNameChange(e.target.value)}
             />
           </FormControl>
           <FormControl>
             <FormLabel>
-              Password{" "}
+              {t("password")}{" "}
               {passwordError && (
-                <Tooltip
-                  hasArrow
-                  label="Incorrect password"
-                  fontSize="md"
-                >
-                  <InfoOutlineIcon color={"Red"} />
-                </Tooltip>
+                <ErrorInfo label={t("login.modal.password-error")} />
               )}
             </FormLabel>
             <InputGroup>
               <Input
                 type={isPasswordVisible ? "text" : "password"}
-                placeholder="Enter password"
+                placeholder={t("password-placeholder")}
                 isInvalid={passwordError}
                 onChange={(e) => handlePasswordChange(e.target.value)}
               />
@@ -163,7 +160,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   size="sm"
                   onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                 >
-                  {isPasswordVisible ? "Hide" : "Show"}
+                  {isPasswordVisible ? t("password-hide") : t("password-show")}
                 </Button>
               </InputRightElement>
             </InputGroup>
@@ -176,7 +173,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             disabled={!isFormValid}
             style={{ width: "100%" }}
           >
-            Log in
+            {t("log-in")}
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -1,0 +1,1 @@
+export const VIEW_REDIRECT_TIMEOUT = 5000;
