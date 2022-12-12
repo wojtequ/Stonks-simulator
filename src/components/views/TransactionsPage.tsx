@@ -141,7 +141,7 @@ export const TransactionsPage = () => {
         ownedStocks={ownedStocks}
         fetchUserStocks={fetchUserStocks}
       />
-      <OwnedStocksCard />
+      <OwnedStocksCard ownedStocks={ownedStocks} stocks={stocks} />
     </Flex>
   );
 };
