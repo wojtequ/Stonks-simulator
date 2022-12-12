@@ -230,6 +230,11 @@ app.get("/api/stocks/date/", async (req, res) => {
 });
 
 app.put("/api/buy", auth, async (req, res) => {
+  if (req.body.price == null || req.body.stockCount == null) {
+    return res
+      .status(400)
+      .json({ message: "Stock count or pice not provided" });
+  }
   const transactionCost = req.body.price * req.body.stockCount;
   const date = new Date();
   const filterUser = { userName: req.user.userName };
@@ -283,6 +288,11 @@ app.put("/api/buy", auth, async (req, res) => {
 });
 
 app.put("/api/sell", auth, async (req, res) => {
+  if (req.body.price == null || req.body.stockCount == null) {
+    return res
+      .status(400)
+      .json({ message: "Stock count or pice not provided" });
+  }
   const filterUser = { userName: req.user.userName };
   const transactionCost = req.body.stockCount * req.body.price;
   const user = await User.findOne(filterUser);
@@ -334,6 +344,20 @@ app.put("/api/sell", auth, async (req, res) => {
     }
   } else {
     return res.status(400).json({ message: "No stocks found" });
+  }
+});
+
+app.get("/api/usersStocks", auth, async (req, res) => {
+  try {
+    const filter = { userName: req.user.userName };
+    const user = await User.findOne(filter);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    return res.json({ status: "ok", stocks: user.ownedStocks });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "Invalid request" });
   }
 });
 

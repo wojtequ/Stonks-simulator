@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { getJwtToken } from "../authorization/utils";
 import { OwnedStocksCard } from "../OwnedStocksCard";
 import { StockChart } from "../StockChart";
 import { StocksList } from "../StocksList";
@@ -22,7 +23,36 @@ export type ChartPoint = {
   value: number;
 };
 
+export type OwnedStock = {
+  stockCount: number;
+  stockName: string;
+};
+
 export const TransactionsPage = () => {
+  const fetchUserStocks = () => {
+    fetch("http://localhost:3000/api/usersStocks", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${getJwtToken()}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject(response);
+      })
+      .then((json) => {
+        setOwnedStocks(json.stocks);
+      })
+      .catch((errorResponse) => {
+        errorResponse.json().then((errorJson: { message: string }) => {
+          console.error(errorJson.message);
+        });
+      });
+  };
+
   useEffect(() => {
     fetch("http://localhost:3000/api/stocks/realtime", {
       method: "GET",
@@ -70,9 +100,12 @@ export const TransactionsPage = () => {
           console.error(errorJson.message);
         });
       });
+
+    fetchUserStocks();
   }, []);
 
   const [stocks, setStocks] = useState<StockInfo[]>([]);
+  const [ownedStocks, setOwnedStocks] = useState<OwnedStock[]>([]);
   const [selectedStock, setSelectedStock] = useState<string>(
     stocks[0]?.symbol ?? ""
   );
@@ -105,6 +138,8 @@ export const TransactionsPage = () => {
         selectedStock={selectedStock}
         stocks={stocks}
         lastDayData={lastDayData}
+        ownedStocks={ownedStocks}
+        fetchUserStocks={fetchUserStocks}
       />
       <OwnedStocksCard />
     </Flex>
