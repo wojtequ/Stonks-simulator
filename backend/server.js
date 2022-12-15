@@ -335,6 +335,62 @@ app.get("/api/usersStocks", auth, async (req, res) => {
   }
 });
 
+app.get("/api/transactionHistory", auth, async (req, res) => {
+  try {
+    const filter = { userName: req.user.userName };
+    const user = await User.findOne(filter);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    return res.json({ status: "ok", history: user.transactions });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "Invalid request" });
+  }
+});
+
+app.put("/api/changePassword", auth, async (req,res) => {
+  try{
+    const user = await User.findOne({
+      userName: req.user.userName,
+    });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if(req.body.password==req.body.newPassword)
+      {
+        return res.status(400).json({message:"New password cannot be the same as old password"})
+      }
+
+    const isPasswordRegex = passwordRegExp.test(req.body.newPassword);
+
+    if(!isPasswordRegex)
+    {
+      return res.status(400).jstockName({message: "Invalid new password"})
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Wrong old password" });
+    }
+    if (isPasswordValid) {
+      const  hashedNewPasssword = await bcrypt.hash(req.body.newPassword, 10);
+      
+      const updatePassword = await User.updateOne({_id: user._id},{password: hashedNewPasssword});
+      console.log(updatePassword)
+      return res.json({ status: "ok"});
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "invalid request" });
+  }
+  });
+
 function auth(req, res, next) {
   const authHeder = req.headers["authorization"];
   const token = authHeder.split(" ")[1];
