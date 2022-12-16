@@ -117,7 +117,7 @@ export const TransactionsPage = () => {
   }, [stocks]);
 
   const [lastDayData, setLastDayData] = useState<ChartData[]>([]);
-
+  console.log(stocks, ownedStocks);
   return (
     <Flex
       mt={10}
