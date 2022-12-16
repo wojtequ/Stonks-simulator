@@ -174,9 +174,12 @@ app.get("/api/stocks/day", async (req, res) => {
             `https://api.nasdaq.com/api/quote/${companies[i]}/chart?assetclass=stocks`
           )
           .then((response) => {
-            response.data.data?.chart.forEach((element) =>
-              datesArray.push(element.z)
-            );
+            response.data.data?.chart.forEach((element) => {
+              datesArray.push({
+                ...element.z,
+                value: Number(Number(element.z.value).toFixed(2)),
+              });
+            });
             object = { name: response.data.data?.symbol, chart: datesArray };
             chartData.push(object);
           })
@@ -208,14 +211,14 @@ app.get("/api/stocks/date/", async (req, res) => {
         const arrayOfObjects = [];
         let newObject = {};
         response.data.data?.chart.forEach((element) =>
-          historyArray.push(element.z.value)
+          historyArray.push(Number(Number(element.z.value).toFixed(2)))
         );
         response.data.data?.chart.forEach((element) =>
           datesArray.push(element.z.dateTime)
         );
         for (let i = 0; i < datesArray.length; i++) {
           arrayOfObjects.push(
-            (newObject = { date: datesArray[i], value: historyArray[i] })
+            (newObject = { dateTime: datesArray[i], value: historyArray[i] })
           );
         }
         return res.json({ status: "ok", historicalDate: arrayOfObjects });
@@ -355,6 +358,65 @@ app.get("/api/usersStocks", auth, async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(400).json({ message: "Invalid request" });
+  }
+});
+
+app.get("/api/transactionHistory", auth, async (req, res) => {
+  try {
+    const filter = { userName: req.user.userName };
+    const user = await User.findOne(filter);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    return res.json({ status: "ok", history: user.transactions });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "Invalid request" });
+  }
+});
+
+app.put("/api/changePassword", auth, async (req, res) => {
+  try {
+    const user = await User.findOne({
+      userName: req.user.userName,
+    });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (req.body.password == req.body.newPassword) {
+      return res
+        .status(400)
+        .json({ message: "New password cannot be the same as old password" });
+    }
+
+    const isPasswordRegex = passwordRegExp.test(req.body.newPassword);
+
+    if (!isPasswordRegex) {
+      return res.status(400).jstockName({ message: "Invalid new password" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Wrong old password" });
+    }
+    if (isPasswordValid) {
+      const hashedNewPasssword = await bcrypt.hash(req.body.newPassword, 10);
+
+      const updatePassword = await User.updateOne(
+        { _id: user._id },
+        { password: hashedNewPasssword }
+      );
+      console.log(updatePassword);
+      return res.json({ status: "ok" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "invalid request" });
   }
 });
 
