@@ -145,9 +145,7 @@ app.get("/api/stocks/realtime", async (req, res) => {
         const object = {
           symbol: response.data.data[i].symbol,
           companyName: response.data.data[i].companyName,
-          lastSalePrice: response.data.data[i].lastSalePrice
-            ? Number(response.data.data[i].lastSalePrice.slice(1)).toFixed(2)
-            : "",
+          lastSalePrice: response.data.data[i].lastSalePrice,
           percentageChange: response.data.data[i].percentageChange,
           deltaIndicator: response.data.data[i].deltaIndicator,
         };
@@ -174,12 +172,9 @@ app.get("/api/stocks/day", async (req, res) => {
             `https://api.nasdaq.com/api/quote/${companies[i]}/chart?assetclass=stocks`
           )
           .then((response) => {
-            response.data.data?.chart.forEach((element) => {
-              datesArray.push({
-                ...element.z,
-                value: Number(Number(element.z.value).toFixed(2)),
-              });
-            });
+            response.data.data?.chart.forEach((element) =>
+              datesArray.push(element.z)
+            );
             object = { name: response.data.data?.symbol, chart: datesArray };
             chartData.push(object);
           })
@@ -211,14 +206,14 @@ app.get("/api/stocks/date/", async (req, res) => {
         const arrayOfObjects = [];
         let newObject = {};
         response.data.data?.chart.forEach((element) =>
-          historyArray.push(Number(Number(element.z.value).toFixed(2)))
+          historyArray.push(element.z.value)
         );
         response.data.data?.chart.forEach((element) =>
           datesArray.push(element.z.dateTime)
         );
         for (let i = 0; i < datesArray.length; i++) {
           arrayOfObjects.push(
-            (newObject = { dateTime: datesArray[i], value: historyArray[i] })
+            (newObject = { date: datesArray[i], value: historyArray[i] })
           );
         }
         return res.json({ status: "ok", historicalDate: arrayOfObjects });
