@@ -368,7 +368,10 @@ app.get("/api/transactionHistory", auth, async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    return res.json({ status: "ok", history: user.transactions });
+    return res.json({
+      status: "ok",
+      history: [...user.transactions.reverse()],
+    });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ message: "Invalid request" });
