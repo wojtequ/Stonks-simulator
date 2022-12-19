@@ -20,6 +20,10 @@ async function connect() {
   try {
     mongoose.connect(process.env.uri);
     console.log("connected to mongo");
+    //get some basic statistics
+    console.log(User.db.host); // localhost
+    console.log(User.db.port); // 27017
+    console.log(User.db.name); // myDatabase
   } catch (error) {
     console.log(error);
   }
@@ -347,5 +351,5 @@ function auth(req, res, next) {
   next();
 }
 
-const port = 3000;
+const port = 3001; //setup a proxy to run with docker
 app.listen(port, console.log(`Listening on port ${port}...`));

@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: stonks_back_dev
+    image: stonks_back_dev_im
+    build: ./backend
+    volumes:
+      - ./backend:/usr/src/stonks_back
+    ports:
+      - "3001:3001"
+    #stdin_open: true
+    #tty: true
+
+  app:
+    container_name: stonks_app_dev
+    image: stonks_app_dev_im
+    build:
+      context: .
+    volumes:
+      - ./:/usr/src/stonks_front/
+    ports:
+      - "3000:3000"
+    #stdin_open: true
+    #tty: true
+    environment:
+      REACT_APP_API_HOST: http://backend
+    depends_on:
+      - backend
+
+  database:
+    container_name: stonks_db_dev
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: tmpPasswd
+
+
+
+
