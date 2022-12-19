@@ -35,6 +35,7 @@ export const PasswordChange = () => {
     const [newPasswordError, setNewPasswordError] = useState<boolean>(false);
     const [isPasswordFormValid, setIsPasswordFormValid] = useState<boolean>(true);
     const [actualPassword, setActualPassword] = useState<string>("");
+    const [newPasswordInput, setNewPasswordInput] = useState<string>("");
     const [newPassword, setNewPassword] = useState<string>("");
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     const [isPasswordConfirmationTrue, setIsPasswordConfirmationTrue] = useState<boolean>(false);
@@ -53,6 +54,7 @@ export const PasswordChange = () => {
     const resetForm = () => {
         setActualPassword("");
         setNewPassword("");
+        setNewPasswordInput("");
         setIsPasswordConfirmationTrue(false);
     }
 
@@ -119,7 +121,7 @@ export const PasswordChange = () => {
                         {newPasswordError && <ErrorInfo label={passwordRulesList} />}
                     </FormLabel>
                     <InputGroup>
-                        <Input type={isPasswordVisible ? "text" : "password"} placeholder="********" size='md' onChange={(e) => handlePasswordChange(e.target.value)} />
+                        <Input type={isPasswordVisible ? "text" : "password"} placeholder="********" size='md' value={newPasswordInput} onChange={(e) => { handlePasswordChange(e.target.value); setNewPasswordInput(e.target.value) }} />
                         <InputRightElement width="4.5rem">
                             <Button h="1.75rem" size="sm" onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
                                 {isPasswordVisible ? t("password-hide") : t("password-show")}
