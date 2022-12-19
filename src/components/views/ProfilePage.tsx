@@ -1,6 +1,9 @@
 import { Fragment, useState } from "react";
-import { Box, Button, Checkbox, Flex, Input, LightMode } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { getUserNameFromSessionStorage } from "../authorization/utils";
+import { PasswordChange } from "../PasswordChange";
+import { t } from "../../translations/utils";
+import { UsernameChange } from "../UsernameChange";
 
 export const Profile = () => {
 
@@ -20,44 +23,27 @@ export const Profile = () => {
         setIsUsernameChangeShown(current => !current)
     }
 
-
     return (
         <Fragment>
-            <LightMode>
-                <Flex gap={5} minH={"216px"} flexWrap="wrap">
-                    <Box borderRadius="15px" maxW='sm' background="white" p={5} boxShadow="dark-lg">
+            <Flex gap={5} minH={"280px"} flexWrap="wrap" alignItems="center" ml={5} mt={5}>
+                <Box borderRadius="15px" maxW='sm' p={5} boxShadow="dark-lg">
+                    <FormControl>
+                        <FormLabel>{t("user-name")}</FormLabel>
                         <Flex>
-                            <Input placeholder={`${getUserNameFromSessionStorage()}`} size='md' disabled />
-                            <Button variant="link" fontWeight="light" onClick={() => handleUsernameChangeClick()} ml={2}>Change</Button>
+                            <Input placeholder={`${getUserNameFromSessionStorage()}`} disabled />
+                            <Button variant="link" fontWeight="light" onClick={() => handleUsernameChangeClick()} ml={2}>{t("change")}</Button>
                         </Flex>
+                        <FormLabel>{t("password")}</FormLabel>
                         <Flex mt={2}>
-                            <Input placeholder="**********" size='md' disabled />
-                            <Button variant="link" fontWeight="light" onClick={() => handlePasswordChangeClick()} ml={2}>Change</Button>
+                            <Input placeholder="**********" disabled />
+                            <Button variant="link" fontWeight="light" onClick={() => handlePasswordChangeClick()} ml={2}>{t("change")}</Button>
                         </Flex>
-                    </Box>
-                    {isPasswordChangeShown && (<Box borderRadius="15px" maxW='sm' background="white" p={5} boxShadow="dark-lg">
-                        <Flex flexDirection="column" alignItems="center" gap={2}>
-                            <Input type="password" placeholder="Current password" size='md' />
-                            <Input type="password" placeholder="New password" size='md' />
-                            <Checkbox colorScheme="green">
-                                Are you sure?
-                            </Checkbox>
-                            <Button colorScheme="blue" size="sm" mt={4}>Change password</Button>
-                        </Flex>
-                    </Box>
-                    ) || isUsernameChangeShown && (<Box borderRadius="15px" maxW='sm' background="white" p={5} boxShadow="dark-lg">
-                        <Flex flexDirection="column" alignItems="center" gap={2}>
-                            <Input type="password" placeholder="Current password" size='md' />
-                            <Input placeholder="New username" size='md' />
-                            <Checkbox colorScheme="green">
-                                Are you sure?
-                            </Checkbox>
-                            <Button colorScheme="blue" size="sm" mt={4}>Change username</Button>
-                        </Flex>
-                    </Box>)}
+                    </FormControl>
 
-                </Flex>
-            </LightMode>
-        </Fragment>
+                </Box>
+                {(isPasswordChangeShown && <PasswordChange />) || (isUsernameChangeShown && <UsernameChange />)}
+
+            </Flex>
+        </Fragment >
     )
 }

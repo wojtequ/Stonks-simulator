@@ -21,7 +21,7 @@ import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { t } from "../../translations/utils";
 import { ErrorInfo } from "../ErrorInfo";
 import { VIEW_REDIRECT_TIMEOUT } from "../views/constants";
-import { DEBOUNCE_TIMEOUT } from "./constants";
+import { DEBOUNCE_TIMEOUT, passwordRegExp } from "./constants";
 import { setJwtToken, setUserNameInSessionStorage } from "./utils";
 
 type RegisterModalProps = {
@@ -36,8 +36,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
   onSave,
 }) => {
   const loginRegExp = /.{5,}/;
-  const passwordRegExp =
-    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
 
   const toast = useToast();
   const passwordRulesList = useMemo(
