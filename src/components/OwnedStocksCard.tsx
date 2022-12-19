@@ -98,7 +98,7 @@ const OwnedShare: React.FC<OwnedShareProps> = ({
           {companyName}
         </Text>
         <Text fontSize="lg" width="33%" textAlign="center">
-          {numberOfShares}
+          {numberOfShares.toFixed(1)}
         </Text>
         <Text fontSize="lg" color="green" width="33%" textAlign="center">
           ${actualValue.toFixed(2)}
