@@ -59,5 +59,18 @@
   "transactions.currently-held-shares.title": "Obecnie Posiadane Akcje",
   "transactions.currently-held-shares.company-name-col": "Jaka firma",
   "transactions.currently-held-shares.actions-col": "Akcje",
-  "transactions.currently-held-shares.actual-value-col": "Aktualna wartość"
+  "transactions.currently-held-shares.actual-value-col": "Aktualna wartość",
+  "stock.price": "Cena akcji",
+  "current.password": "Aktualne hasło",
+  "new.password": "Nowe hasło",
+  "profile-confirmation": "Jesteś pewien?",
+  "profile-change-password": "Zmień hasło",
+  "change": "Zmień",
+  "profile-password-changed": "Hasło zostało zmienione",
+  "profile-password-wrong.actual": "Aktualne hasło jest nieprawidłowe",
+  "profile-password-same": "Nowe hasło nie może być takie samo jak aktualne",
+  "new.username": "Nowa nazwa użytkownika",
+  "profile-change-username": "Zmień nazwę",
+  "profile-username-changed": "Nazwa użytkownika została zmieniona",
+  "profile-username-same": "Nowa nazwa użytkownika nie może być taka sama jak aktualna"
 }
