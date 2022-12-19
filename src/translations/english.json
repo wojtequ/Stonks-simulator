@@ -52,5 +52,12 @@
   "details.table.date-col": "Date",
   "details.table.final-balance-col": "Transaction Cost",
   "details.table.transaction-buy-cell": "BUY",
-  "details.table.transaction-sell-cell": "SELL"
+  "details.table.transaction-sell-cell": "SELL",
+  "transactions.chart.buy.placeholder": "How much actions",
+  "transactions.chart.button.buy": "Buy Actions",
+  "transactions.chart.button.sell": "Sell Actions",
+  "transactions.currently-held-shares.title": "Shares Currently Held",
+  "transactions.currently-held-shares.company-name-col": "What company",
+  "transactions.currently-held-shares.actions-col": "Shares",
+  "transactions.currently-held-shares.actual-value-col": "Actual value"
 }

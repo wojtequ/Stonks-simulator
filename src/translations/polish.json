@@ -47,10 +47,17 @@
   "toast.homepage.add.funds.error": "Niepomyślna aktualizacja funduszy",
   "stock.price": "Cena akcji",
   "details.table.transactions-col": "Typ transakcji",
-  "details.table.invested-col": "Zainwestowane Środki",
+  "details.table.invested-col": "Zainwestowane Akcje",
   "details.table.company-col": "Nazwa Firmy",
   "details.table.date-col": "Data",
   "details.table.final-balance-col": "Koszt Transakcji",
   "details.table.transaction-buy-cell": "KUPNO",
-  "details.table.transaction-sell-cell": "SPRZEDAŻ"
+  "details.table.transaction-sell-cell": "SPRZEDAŻ",
+  "transactions.chart.buy.placeholder": "Ile akcji",
+  "transactions.chart.button.buy": "Kup akcje",
+  "transactions.chart.button.sell": "Sprzedaj Akcje",
+  "transactions.currently-held-shares.title": "Obecnie Posiadane Akcje",
+  "transactions.currently-held-shares.company-name-col": "Jaka firma",
+  "transactions.currently-held-shares.actions-col": "Akcje",
+  "transactions.currently-held-shares.actual-value-col": "Aktualna wartość"
 }

@@ -1,4 +1,5 @@
 import { Box, Flex, Skeleton, Text } from "@chakra-ui/react";
+import { t } from "../translations/utils";
 import { OwnedStock, StockInfo } from "./views/TransactionsPage";
 
 type OwnedStocksCardProps = {
@@ -41,11 +42,19 @@ export const OwnedStocksCard: React.FC<OwnedStocksCardProps> = ({
           overflow="auto"
           gap="10px"
         >
-          <Text fontSize="xl">Shares Currently Held</Text>
+          <Text fontSize="xl">
+            {t("transactions.currently-held-shares.title")}
+          </Text>
           <Flex justifyContent="space-between">
-            <Text fontSize="lg">What company</Text>
-            <Text fontSize="lg">Shares</Text>
-            <Text fontSize="lg">Actual Value</Text>
+            <Text fontSize="lg">
+              {t("transactions.currently-held-shares.company-name-col")}
+            </Text>
+            <Text fontSize="lg">
+              {t("transactions.currently-held-shares.actions-col")}
+            </Text>
+            <Text fontSize="lg">
+              {t("transactions.currently-held-shares.actual-value-col")}
+            </Text>
           </Flex>
           {ownedStocks.map((ownedStock) => (
             <OwnedShare

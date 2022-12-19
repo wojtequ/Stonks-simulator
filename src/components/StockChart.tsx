@@ -264,9 +264,9 @@ export const StockChart: React.FC<StockChartProps> = ({
       .then((json) => {
         fetchUserStocks();
         toast({
-          title: `Stocks sold +$${
+          title: `Stocks sold +$${(
             sliderValue * Number(getActualPriceOfSelectedStock())
-          } has been succesfull added to your account`,
+          ).toFixed(2)} has been succesfull added to your account`,
           status: "success",
           duration: 2500,
           isClosable: true,
@@ -375,7 +375,7 @@ export const StockChart: React.FC<StockChartProps> = ({
                   handleNumberOfStockHange(Number(e.target.value))
                 }
                 width="50%"
-                placeholder="How Much Auctions"
+                placeholder={t("transactions.chart.buy.placeholder")}
               />
               <Button
                 background="#1782FF"
@@ -384,7 +384,7 @@ export const StockChart: React.FC<StockChartProps> = ({
                 // disabled={balance-auctions}
                 onClick={() => setIsTransacitonModalOpened(true)}
               >
-                Buy Auction
+                {t("transactions.chart.button.buy")}
               </Button>
             </Flex>
             <Flex height="10%" gap="50px" mt={15}>
@@ -394,6 +394,7 @@ export const StockChart: React.FC<StockChartProps> = ({
                   defaultValue={getOwnedStocks()?.stockCount ?? 0}
                   min={0}
                   max={getOwnedStocks()?.stockCount ?? 0}
+                  step={0.1}
                   value={sliderValue}
                   isDisabled={!getOwnedStocks()}
                   colorScheme="teal"
@@ -412,7 +413,7 @@ export const StockChart: React.FC<StockChartProps> = ({
                       ml="-2.5"
                       fontSize=" md"
                     >
-                      {getOwnedStocks()?.stockCount}
+                      {getOwnedStocks()?.stockCount.toFixed(1)}
                     </SliderMark>
                   )}
                   <SliderTrack>
@@ -437,7 +438,7 @@ export const StockChart: React.FC<StockChartProps> = ({
                 disabled={!getOwnedStocks()}
                 onClick={sellStocks}
               >
-                Sell auction
+                {t("transactions.chart.button.sell")}
               </Button>
             </Flex>
           </Box>

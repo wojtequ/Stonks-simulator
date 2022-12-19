@@ -90,7 +90,7 @@ export const Details = () => {
                 >
                   <Text as="b">
                     {transaction.buyOrSell ? "$" : "-$"}
-                    {transaction.transactionCost}
+                    {transaction.transactionCost.toFixed(2)}
                   </Text>
                 </Td>
               </Tr>
