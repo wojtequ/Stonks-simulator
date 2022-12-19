@@ -55,5 +55,7 @@
   "profile-password-wrong.actual": "Aktualne hasło jest nieprawidłowe",
   "profile-password-same": "Nowe hasło nie może być takie samo jak aktualne",
   "new.username": "Nowa nazwa użytkownika",
-  "profile-change-username": "Zmień nazwę"
+  "profile-change-username": "Zmień nazwę",
+  "profile-username-changed": "Nazwa użytkownika została zmieniona",
+  "profile-username-same": "Nowa nazwa użytkownika nie może być taka sama jak aktualna"
 }

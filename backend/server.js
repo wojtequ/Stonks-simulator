@@ -393,7 +393,7 @@ app.put("/api/changePassword", auth, async (req, res) => {
     const isPasswordRegex = passwordRegExp.test(req.body.newPassword);
 
     if (!isPasswordRegex) {
-      return res.status(400).jstockName({ message: "Invalid new password" });
+      return res.status(400).json({ message: "Invalid new password" });
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -420,64 +420,66 @@ app.put("/api/changePassword", auth, async (req, res) => {
   }
 });
 
-app.put("/api/changeUsername", auth, async (req,res) => {
-    try{
-      const user = await User.findOne({
-        userName: req.user.userName,
+app.put("/api/changeUsername", auth, async (req, res) => {
+  try {
+    const user = await User.findOne({
+      userName: req.user.userName,
+    });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    try {
+      const user1 = await User.findOne({
+        userName: req.user.newUsername,
       });
-      if (!user) {
-        return res.status(400).json({ message: "User not found" });
-      }
-      try{
-        const user1 = await User.findOne({
-          userName: req.user.newUsername,
-        });
-        const oldUsername = req.user.userName
-        const newUsername = req.body.newUsername
-        const isPasswordValid = await bcrypt.compare(
-          req.body.password,
-          user.password
+      const oldUsername = req.user.userName;
+      const newUsername = req.body.newUsername;
+      const isPasswordValid = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+
+      if (isPasswordValid) {
+        if (oldUsername === newUsername) {
+          return res
+            .status(400)
+            .json({ message: "Old username can't be new username" });
+        }
+
+        const isUsernameRegex = loginRegExp.test(newUsername);
+
+        if (!isUsernameRegex) {
+          return res.status(400).json({ message: "Invalid new username" });
+        }
+
+        const updateUsername = await User.updateOne(
+          { _id: user._id },
+          { userName: newUsername }
+        );
+        const token = jwt.sign(
+          {
+            userName: newUsername,
+          },
+          process.env.jwtkey
         );
 
-        if(isPasswordValid){
-        if(oldUsername===newUsername){
-          return res.status(400).json({ message: "Old username can't be new username"});
-        }
-      
-        const isUsernameRegex = loginRegExp.test(newUsername);
-  
-      if(!isUsernameRegex)
-      {
-        return res.status(400).json({message: "Invalid new username"})
-      }
-
-    
-      
-      
-      const updateUsername = await User.updateOne({_id: user._id},{userName: newUsername});
-      const token = jwt.sign(
-        {
+        return res.json({
+          status: "ok",
+          Newtoken: token,
           userName: newUsername,
-        },
-        process.env.jwtkey
-      );
-      
-      return res.json({ status: "ok",Newtoken: token});
-      }
-      else{
+        });
+      } else {
         return res.status(400).json({ message: "Wrong password" });
       }
-      
-      }catch(error){
-        console.log(error)
-        return res.status(400).json({ message: "this username already exists" });
-      }
-          
     } catch (error) {
       console.log(error);
-      return res.status(400).json({ message: "invalid request" });
+      return res.status(400).json({ message: "this username already exists" });
     }
-    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "invalid request" });
+  }
+});
 
 function auth(req, res, next) {
   const authHeder = req.headers["authorization"];

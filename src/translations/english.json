@@ -55,5 +55,7 @@
   "profile-password-wrong.actual": "Actual password is incorrect",
   "profile-password-same": "New password cannot be the same as actual password",
   "new.username": "New username",
-  "profile-change-username": "Change username"
+  "profile-change-username": "Change username",
+  "profile-username-changed": "Username changed succesfully",
+  "profile-username-same": "New username cannot be the same as actual username"
 }
