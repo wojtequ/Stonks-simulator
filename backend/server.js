@@ -405,7 +405,12 @@ app.put("/api/changeUsername", auth, async (req,res) => {
         });
         const oldUsername = req.user.userName
         const newUsername = req.body.newUsername
-        
+        const isPasswordValid = await bcrypt.compare(
+          req.body.password,
+          user.password
+        );
+
+        if(isPasswordValid){
         if(oldUsername===newUsername){
           return res.status(400).json({ message: "Old username can't be new username"});
         }
@@ -416,6 +421,10 @@ app.put("/api/changeUsername", auth, async (req,res) => {
       {
         return res.status(400).json({message: "Invalid new username"})
       }
+
+    
+      
+      
       const updateUsername = await User.updateOne({_id: user._id},{userName: newUsername});
       const token = jwt.sign(
         {
@@ -425,6 +434,11 @@ app.put("/api/changeUsername", auth, async (req,res) => {
       );
       
       return res.json({ status: "ok",Newtoken: token});
+      }
+      else{
+        return res.status(400).json({ message: "Wrong password" });
+      }
+      
       }catch(error){
         console.log(error)
         return res.status(400).json({ message: "this username already exists" });
