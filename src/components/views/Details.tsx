@@ -10,6 +10,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { t } from "../../translations/utils";
 import { getJwtToken } from "../authorization/utils";
 
 type TransactionData = {
@@ -23,7 +24,9 @@ type TransactionData = {
 
 const getFormatedDate = (date: string) => {
   const parsedDate = new Date(date);
-  return `${parsedDate.getFullYear()}-${parsedDate.getMonth()}-${parsedDate.getDay()}`;
+  return `${parsedDate.getFullYear()}-${
+    parsedDate.getMonth() + 1
+  }-${parsedDate.getDay()}`;
 };
 
 export const Details = () => {
@@ -61,18 +64,20 @@ export const Details = () => {
         <Table variant="striped" colorScheme="teal" size="lg" fontSize="xl">
           <Thead>
             <Tr>
-              <Th textAlign="center">Transaction Type</Th>
-              <Th textAlign="center">Invested Shares</Th>
-              <Th textAlign="center">Company Name</Th>
-              <Th textAlign="center">Date</Th>
-              <Th textAlign="center">Final Balance From Transaction</Th>
+              <Th textAlign="center">{t("details.table.transactions-col")}</Th>
+              <Th textAlign="center">{t("details.table.invested-col")}</Th>
+              <Th textAlign="center">{t("details.table.company-col")}</Th>
+              <Th textAlign="center">{t("details.table.date-col")}</Th>
+              <Th textAlign="center">{t("details.table.final-balance-col")}</Th>
             </Tr>
           </Thead>
           <Tbody>
             {transactionsHistory.map((transaction, index) => (
               <Tr key={index}>
                 <Td textAlign="center">
-                  {transaction.buyOrSell ? "SELL" : "BUY"}
+                  {transaction.buyOrSell
+                    ? t("details.table.transaction-sell-cell")
+                    : t("details.table.transaction-buy-cell")}
                 </Td>
                 <Td textAlign="center">{transaction.stockCount}</Td>
                 <Td textAlign="center">{transaction.stockName}</Td>

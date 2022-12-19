@@ -45,5 +45,12 @@
   "add-funds.modal.card.after-add": "After transaction",
   "toast.homepage.add.funds.success": "Funds updated succesfully",
   "toast.homepage.add.funds.error": "Failed updating funds",
-  "stock.price": "Stock Price"
+  "stock.price": "Stock Price",
+  "details.table.transactions-col": "Transaction Type",
+  "details.table.invested-col": "Invested Shares",
+  "details.table.company-col": "Company Name",
+  "details.table.date-col": "Date",
+  "details.table.final-balance-col": "Transaction Cost",
+  "details.table.transaction-buy-cell": "BUY",
+  "details.table.transaction-sell-cell": "SELL"
 }

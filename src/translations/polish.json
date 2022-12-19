@@ -45,5 +45,12 @@
   "add-funds.modal.card.after-add": "Po transakcji",
   "toast.homepage.add.funds.success": "Pomyślnie zaktualizowano fundusze",
   "toast.homepage.add.funds.error": "Niepomyślna aktualizacja funduszy",
-  "stock.price": "Cena akcji"
+  "stock.price": "Cena akcji",
+  "details.table.transactions-col": "Typ transakcji",
+  "details.table.invested-col": "Zainwestowane Środki",
+  "details.table.company-col": "Nazwa Firmy",
+  "details.table.date-col": "Data",
+  "details.table.final-balance-col": "Koszt Transakcji",
+  "details.table.transaction-buy-cell": "KUPNO",
+  "details.table.transaction-sell-cell": "SPRZEDAŻ"
 }
