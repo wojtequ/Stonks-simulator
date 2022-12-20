@@ -24,10 +24,9 @@ type TransactionData = {
 
 const getFormatedDate = (date: string) => {
   const parsedDate = new Date(date);
-  return `${parsedDate.getFullYear()}-${
-    parsedDate.getMonth() + 1
-  }-${parsedDate.getDay()}`;
+  return parsedDate.toJSON().slice(0, 10);
 };
+
 
 export const Details = () => {
   useEffect(() => {
