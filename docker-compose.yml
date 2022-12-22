@@ -7,6 +7,7 @@ services:
     build: ./backend
     volumes:
       - ./backend:/usr/src/stonks_back
+      - /usr/src/stonks_back/node_modules
     ports:
       - "3001:3001"
     #stdin_open: true
@@ -19,6 +20,7 @@ services:
       context: .
     volumes:
       - ./:/usr/src/stonks_front/
+      - /usr/src/stonks_front/node_modules
     ports:
       - "3000:3000"
     #stdin_open: true
