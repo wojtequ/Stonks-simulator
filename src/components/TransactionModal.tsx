@@ -80,17 +80,6 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     Cancel
                   </Button>
                 </ButtonGroup>
-                {/* <Button
-                  colorScheme="blue"
-                  width="100%"
-                  marginTop="10%"
-                  onClick={() => {
-                    onSubmit();
-                    onClose();
-                  }}
-                > */}
-                {/* {t("add-funds.modal.add-button")}
-                </Button> */}
               </Flex>
             </Box>
             <AddBallanceCard

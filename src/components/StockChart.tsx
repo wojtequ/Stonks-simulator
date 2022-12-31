@@ -6,9 +6,15 @@ import {
   Input,
   LightMode,
   Skeleton,
+  Slider,
+  SliderFilledTrack,
+  SliderMark,
+  SliderThumb,
+  SliderTrack,
+  Tooltip as SliderTooltip,
   useToast,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState, Fragment, useRef } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -18,12 +24,16 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { getJwtToken } from "./authorization/utils";
-import { ChartData, ChartPoint, StockInfo } from "./views/TransactionsPage";
-import "./transactions_page.css";
-import { TransactionModal } from "./TransactionModal";
 import { t } from "../translations/utils";
-import { totalmem } from "os";
+import { getJwtToken } from "./authorization/utils";
+import { TransactionModal } from "./TransactionModal";
+import "./transactions_page.css";
+import {
+  ChartData,
+  ChartPoint,
+  OwnedStock,
+  StockInfo,
+} from "./views/TransactionsPage";
 
 enum TimePeriod {
   Day = "oneDay",
@@ -36,16 +46,32 @@ type StockChartProps = {
   stocks: StockInfo[];
   selectedStock: string;
   lastDayData: ChartData[];
+  ownedStocks: OwnedStock[];
+  fetchUserStocks: VoidFunction;
 };
 
 export const StockChart: React.FC<StockChartProps> = ({
   stocks,
   selectedStock,
   lastDayData,
+  ownedStocks,
+  fetchUserStocks,
 }) => {
+  const getOwnedStocks = () =>
+    ownedStocks.find((stock) => stock.stockName === selectedStock);
+
+  const getActualPriceOfSelectedStock = () =>
+    stocks.find((stock) => stock.symbol === selectedStock)?.lastSalePrice;
+
   const [activePeriodOfTime, setActivePeriodOfTime] = useState<TimePeriod>(
     TimePeriod.Day
   );
+
+  const [showSliderTooltip, setShowSliderTooltip] = useState(false);
+  const [sliderValue, setSliderValue] = useState(
+    getOwnedStocks()?.stockCount ?? 0
+  );
+
   const toast = useToast();
 
   const finalPrice = useRef(0);
@@ -59,8 +85,11 @@ export const StockChart: React.FC<StockChartProps> = ({
     finalPrice.current = Number(
       Number(numberOfStocks * getSelectedStockPrice).toFixed(2)
     );
-    console.log(finalPrice.current);
   };
+
+  useEffect(() => {
+    setSliderValue(getOwnedStocks()?.stockCount ?? 0);
+  }, [selectedStock]);
 
   const setChartDataForActiveStock = useCallback(() => {
     switch (activePeriodOfTime) {
@@ -190,6 +219,7 @@ export const StockChart: React.FC<StockChartProps> = ({
         return Promise.reject(response);
       })
       .then((json) => {
+        fetchUserStocks();
         toast({
           title: t("toast.homepage.add.funds.success"),
           status: "success",
@@ -211,6 +241,48 @@ export const StockChart: React.FC<StockChartProps> = ({
         });
       });
   };
+
+  const sellStocks = () =>
+    fetch(`http://localhost:3000/api/sell`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${getJwtToken()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        stockCount: sliderValue,
+        stockName: selectedStock,
+        price: getActualPriceOfSelectedStock(),
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject(response);
+      })
+      .then((json) => {
+        fetchUserStocks();
+        toast({
+          title: `Stocks sold +$${(
+            sliderValue * Number(getActualPriceOfSelectedStock())
+          ).toFixed(2)} has been succesfull added to your account`,
+          status: "success",
+          duration: 2500,
+          isClosable: true,
+        });
+      })
+      .catch((errorResponse) => {
+        errorResponse.json().then((errorJson: { message: string }) => {
+          toast({
+            title: errorJson.message,
+            status: "error",
+            duration: 2500,
+            isClosable: true,
+          });
+          console.error(errorJson.message);
+        });
+      });
 
   return (
     <Fragment>
@@ -262,7 +334,7 @@ export const StockChart: React.FC<StockChartProps> = ({
                 1y
               </Button>
             </ButtonGroup>
-            <Skeleton width="100%" height="70%" isLoaded={data.length > 0}>
+            <Skeleton width="100%" height="60%" isLoaded={data.length > 0}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   width={500}
@@ -284,7 +356,7 @@ export const StockChart: React.FC<StockChartProps> = ({
                   />
                   <Tooltip labelStyle={{ color: "black" }} />
                   <Line
-                    type="monotone"
+                    type="linear"
                     dataKey="value"
                     stroke="#6CB8D6"
                     dot={false}
@@ -303,7 +375,7 @@ export const StockChart: React.FC<StockChartProps> = ({
                   handleNumberOfStockHange(Number(e.target.value))
                 }
                 width="50%"
-                placeholder="How Much Auctions"
+                placeholder={t("transactions.chart.buy.placeholder")}
               />
               <Button
                 background="#1782FF"
@@ -312,7 +384,61 @@ export const StockChart: React.FC<StockChartProps> = ({
                 // disabled={balance-auctions}
                 onClick={() => setIsTransacitonModalOpened(true)}
               >
-                Buy Auction
+                {t("transactions.chart.button.buy")}
+              </Button>
+            </Flex>
+            <Flex height="10%" gap="50px" mt={15}>
+              <Box width="50%">
+                <Slider
+                  id="slider"
+                  defaultValue={getOwnedStocks()?.stockCount ?? 0}
+                  min={0}
+                  max={getOwnedStocks()?.stockCount ?? 0}
+                  step={0.1}
+                  value={sliderValue}
+                  isDisabled={!getOwnedStocks()}
+                  colorScheme="teal"
+                  color="black"
+                  onChange={(v) => setSliderValue(v)}
+                  onMouseEnter={() => setShowSliderTooltip(true)}
+                  onMouseLeave={() => setShowSliderTooltip(false)}
+                >
+                  <SliderMark value={0} mt="1" fontSize="md">
+                    0
+                  </SliderMark>
+                  {!!getOwnedStocks() && (
+                    <SliderMark
+                      value={getOwnedStocks()?.stockCount ?? 0}
+                      mt="1"
+                      ml="-2.5"
+                      fontSize=" md"
+                    >
+                      {getOwnedStocks()?.stockCount.toFixed(1)}
+                    </SliderMark>
+                  )}
+                  <SliderTrack>
+                    <SliderFilledTrack />
+                  </SliderTrack>
+                  <SliderTooltip
+                    hasArrow
+                    bg="teal.500"
+                    color="white"
+                    placement="top"
+                    isOpen={showSliderTooltip}
+                    label={`${sliderValue}`}
+                  >
+                    <SliderThumb />
+                  </SliderTooltip>
+                </Slider>
+              </Box>
+              <Button
+                background="whatsapp.500"
+                width="50%"
+                color="white"
+                disabled={!getOwnedStocks()}
+                onClick={sellStocks}
+              >
+                {t("transactions.chart.button.sell")}
               </Button>
             </Flex>
           </Box>
