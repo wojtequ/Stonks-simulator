@@ -23,7 +23,7 @@ export type ChartPoint = {
 
 export const TransactionsPage = () => {
   useEffect(() => {
-    fetch("http://localhost:3000/api/stocks/realtime", {
+    fetch("/api/stocks/realtime", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export const TransactionsPage = () => {
         });
       });
 
-    fetch("http://localhost:3000/api/stocks/day", {
+    fetch("/api/stocks/day", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

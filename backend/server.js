@@ -30,7 +30,12 @@ async function connect() {
 }
 connect();
 
+app.get('/', (req, res) => {
+  res.send('Backend Hello World')
+});
+
 app.post("/api/register", async (req, res) => {
+  console.log("Succesfully executed...")
   try {
     const isUserNameValid = loginRegExp.test(req.body.userName);
     const isPasswordValid = passwordRegExp.test(req.body.password);
@@ -139,6 +144,7 @@ const companies = [
 ];
 
 app.get("/api/stocks/realtime", async (req, res) => {
+  console.log("Fetching realtime data...")
   try {
     const stocksArray = [];
     await axios({

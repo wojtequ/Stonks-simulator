@@ -9,5 +9,6 @@ COPY package.json ./
 RUN npm install
 #the source is already mapped in the directory
 
+EXPOSE 3001
 #run backend
 CMD ["npm", "start"]

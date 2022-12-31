@@ -86,7 +86,7 @@ export const StockChart: React.FC<StockChartProps> = ({
   const fetchChartData = useCallback(
     (days: number, symbol: string) =>
       fetch(
-        `http://localhost:3000/api/stocks/date/?symbol=${symbol}&days=${days}`,
+        `/api/stocks/date/?symbol=${symbol}&days=${days}`,
         {
           method: "GET",
           headers: {
@@ -113,7 +113,7 @@ export const StockChart: React.FC<StockChartProps> = ({
 
   const [balance, setBalance] = useState<number>(0);
 
-  fetch(`http://localhost:3000/api/balance`, {
+  fetch(`/api/balance`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${getJwtToken()}`,
@@ -171,7 +171,7 @@ export const StockChart: React.FC<StockChartProps> = ({
     }
   };
   const submitTransaction = () => {
-    fetch(`http://localhost:3000/api/buy`, {
+    fetch(`/api/buy`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${getJwtToken()}`,

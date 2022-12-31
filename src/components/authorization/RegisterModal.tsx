@@ -101,7 +101,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
       return;
     }
 
-    fetch("http://localhost:3000/api/register", {
+    fetch("/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

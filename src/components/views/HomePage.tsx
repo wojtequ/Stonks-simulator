@@ -9,7 +9,7 @@ import { BalanceManagmentButtonGroup } from "../BalanceManagmentButtonGroup";
 export const HomePage = () => {
   const toast = useToast();
 
-  fetch(`http://localhost:3000/api/balance`, {
+  fetch(`/api/balance`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${getJwtToken()}`,
@@ -33,7 +33,7 @@ export const HomePage = () => {
 
   const submitNewBalance = useCallback(
     (addedBalance: number) => {
-      fetch(`http://localhost:3000/api/balance`, {
+      fetch(`/api/balance`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${getJwtToken()}`,

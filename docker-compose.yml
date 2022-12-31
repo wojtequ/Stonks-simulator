@@ -10,8 +10,8 @@ services:
       - /usr/src/stonks_back/node_modules
     ports:
       - "3001:3001"
-    #stdin_open: true
-    #tty: true
+    networks:
+      - stonks_net
 
   app:
     container_name: stonks_app_dev
@@ -21,13 +21,10 @@ services:
     volumes:
       - ./:/usr/src/stonks_front/
       - /usr/src/stonks_front/node_modules
-
     ports:
       - "3000:3000"
-    #stdin_open: true
-    #tty: true
-    environment:
-      REACT_APP_API_HOST: http://backend
+    networks:
+      - stonks_net
     depends_on:
       - backend
 
@@ -37,9 +34,12 @@ services:
     restart: always
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: tmpPasswd
+    networks:
+      - stonks_net
+
+networks:
+  stonks_net:
+    driver: bridge
 
 
 
