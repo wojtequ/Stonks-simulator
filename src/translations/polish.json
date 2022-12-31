@@ -60,6 +60,7 @@
   "transactions.currently-held-shares.company-name-col": "Jaka firma",
   "transactions.currently-held-shares.actions-col": "Akcje",
   "transactions.currently-held-shares.actual-value-col": "Aktualna wartość",
+  "transactions.currently-held-shares.totalGain": "Całkowity zysk",
   "stock.price": "Cena akcji",
   "current.password": "Aktualne hasło",
   "new.password": "Nowe hasło",

@@ -22,7 +22,7 @@ services:
       - ./:/usr/src/stonks_front/
       - /usr/src/stonks_front/node_modules
     ports:
-      - "3000:3000"
+      - "3000:3001"
     networks:
       - stonks_net
     depends_on:

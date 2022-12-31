@@ -4,6 +4,7 @@ import { getJwtToken } from "../authorization/utils";
 import { OwnedStocksCard } from "../OwnedStocksCard";
 import { StockChart } from "../StockChart";
 import { StocksList } from "../StocksList";
+import {TotalGainBox} from "../TotalGainBox";
 
 export type StockInfo = {
   companyName: string;
@@ -30,7 +31,7 @@ export type OwnedStock = {
 
 export const TransactionsPage = () => {
   const fetchUserStocks = () => {
-    fetch("http://localhost:3000/api/usersStocks", {
+    fetch("/api/usersStocks", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${getJwtToken()}`,
@@ -142,6 +143,7 @@ export const TransactionsPage = () => {
         fetchUserStocks={fetchUserStocks}
       />
       <OwnedStocksCard ownedStocks={ownedStocks} stocks={stocks} />
+      <TotalGainBox ownedStocks={ownedStocks} stocks={stocks} />
     </Flex>
   );
 };

@@ -60,6 +60,7 @@
   "transactions.currently-held-shares.company-name-col": "What company",
   "transactions.currently-held-shares.actions-col": "Shares",
   "transactions.currently-held-shares.actual-value-col": "Actual value",
+  "transactions.currently-held-shares.totalGain": "Total gain",
   "current.password": "Current Password",
   "new.password": "New password",
   "profile-confirmation": "Are you sure?",

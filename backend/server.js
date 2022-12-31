@@ -388,6 +388,51 @@ app.get("/api/transactionHistory", auth, async (req, res) => {
   }
 });
 
+app.get("/api/totalGain", auth, async(req, res) => {
+  console.log("Executing total gain")
+  //console.log(companies)
+  try{
+    //get given user
+    const uNameFilter = {userName: req.user.userName };
+    const user = await User.findOne(uNameFilter);
+
+    if(!user) {
+      return res.status(400).json({ message: "User not found"});
+    }
+
+    //summarize transaction history
+    let allTrans = user.transactions
+    //console.log(user.transactions)
+
+    let summary = {}
+    //set summary format
+    for(const i of companies) {
+      //console.log(i)
+      summary[i] = 0
+    }
+
+    //iterate over transaction history
+    for(const i of allTrans) {
+      console.log(i)
+      if(!i.buyOrSell) {
+        summary[i.stockName] -= i.transactionCost
+      }
+      else{
+        summary[i.stockName] += i.transactionCost
+      }
+    }
+    console.log(summary)
+    return res.json({
+      status: "ok",
+      tester: "present",
+      summary: summary,
+    });
+  } catch(error) {
+    console.log(error);
+    return res.status(400).json({ message: "Bad totalGain request"})
+  }
+});
+
 app.put("/api/changePassword", auth, async (req, res) => {
   try {
     const user = await User.findOne({

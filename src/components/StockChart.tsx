@@ -55,7 +55,7 @@ export const StockChart: React.FC<StockChartProps> = ({
   selectedStock,
   lastDayData,
   ownedStocks,
-  fetchUserStocks,
+  fetchUserStocks
 }) => {
   const getOwnedStocks = () =>
     ownedStocks.find((stock) => stock.stockName === selectedStock);
@@ -243,7 +243,7 @@ export const StockChart: React.FC<StockChartProps> = ({
   };
 
   const sellStocks = () =>
-    fetch(`http://localhost:3000/api/sell`, {
+    fetch(`/api/sell`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${getJwtToken()}`,

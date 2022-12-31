@@ -30,7 +30,7 @@ const getFormatedDate = (date: string) => {
 
 export const Details = () => {
   useEffect(() => {
-    fetch("http://localhost:3000/api/transactionHistory", {
+    fetch("/api/transactionHistory", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${getJwtToken()}`,
