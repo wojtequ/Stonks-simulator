@@ -4,7 +4,7 @@ import { OwnedStock, StockInfo } from "./views/TransactionsPage";
 import { useEffect, useState } from "react";
 import { getJwtToken } from "./authorization/utils";
 
-var stockBalance = {}
+var stockBalance: {[index: string]:any} = {}
 
 type totalGainBoxProps = {
     ownedStocks: OwnedStock[];
@@ -14,9 +14,6 @@ export const TotalGainBox: React.FC<totalGainBoxProps> = ({
     ownedStocks,
     stocks
     }) => {
-    //console.log("Calculating total gain");
-    //console.log(ownedStocks);
-
     fetch("/api/totalGain", {
             method: "GET",
             headers: {
@@ -26,8 +23,6 @@ export const TotalGainBox: React.FC<totalGainBoxProps> = ({
         })
             .then((response) => response.json())
             .then((responseJ) => {
-                //console.log(responseJ.summary)
-
                 for(const [code, bal] of Object.entries(responseJ.summary)) {
                     stockBalance[String(code)] = Number(bal);
                 }
@@ -39,25 +34,21 @@ export const TotalGainBox: React.FC<totalGainBoxProps> = ({
                 console.error(errorResponse)
             });
 
-    //console.log("Val:")
-    console.log(ownedStocks)
     let totalGain = 0
+    let totalStockValue = 0
 
 
     for(const stock of ownedStocks) {
         let transactionHistory = stockBalance[stock.stockName]
-        let rev = Number(stocks.find((cmp) => cmp.symbol === stock.stockName)?.lastSalePrice) * Number(stock.stockCount)
-
-        console.log(transactionHistory)
-        console.log(rev)
+        let rev = (Number(stocks.find((cmp) => cmp.symbol === stock.stockName)?.lastSalePrice) * Number(stock.stockCount))
+        totalStockValue += rev
         totalGain += (transactionHistory + rev)
     }
-    console.log(stockBalance)
     return (
         <Skeleton
             className="transactions-page-total-gain"
             isLoaded={true}
-            height="20%"
+            height="30%"
         >
             <Flex
                 direction="column"
@@ -81,9 +72,13 @@ export const TotalGainBox: React.FC<totalGainBoxProps> = ({
                     overflow="auto"
                     gap="10px"
                 >
+                    <Text fontSize="xl">
+                        {t("transactions.currently-held-shares.totalCurrentValue")}: ${totalStockValue.toFixed(2)}
+                    </Text>
                     <Text fontSize="xl" color = {totalGain > 0 ? "green" : "red"}>
                         {t("transactions.currently-held-shares.totalGain")}: ${totalGain.toFixed(2)}
                     </Text>
+
                 </Flex>
             </Flex>
         </Skeleton>
