@@ -12,8 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { Line, LineChart, YAxis } from "recharts";
 import { t } from "../translations/utils";
-import { ChartData, StockInfo } from "./views/TransactionsPage";
 import "./transactions_page.css";
+import { ChartData, StockInfo } from "./views/TransactionsPage";
 
 const companiesLogos = {
   GOOG: "https://i.imgur.com/XfSnH5W.png",
@@ -83,7 +83,7 @@ export const RadioCard: React.FC<RadioCardProps> = ({
       // maxW="356px"
       minW="290px"
       color="black"
-      borderWidth="2px"
+      borderWidth="3px"
       borderRadius="8px"
       backgroundColor="#FCFCFC"
       boxShadow="md"
