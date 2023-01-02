@@ -1,10 +1,11 @@
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex, Highlight, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { t } from "../../translations/utils";
 import { getJwtToken } from "../authorization/utils";
 import { OwnedStocksCard } from "../OwnedStocksCard";
 import { StockChart } from "../StockChart";
 import { StocksList } from "../StocksList";
-import {TotalGainBox} from "../TotalGainBox";
+import { TotalWorth } from "../TotalWorth";
 
 export type StockInfo = {
   companyName: string;
@@ -31,7 +32,7 @@ export type OwnedStock = {
 
 export const TransactionsPage = () => {
   const fetchUserStocks = () => {
-    fetch("/api/usersStocks", {
+    fetch("http://localhost:3000/api/usersStocks", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${getJwtToken()}`,
@@ -46,6 +47,30 @@ export const TransactionsPage = () => {
       })
       .then((json) => {
         setOwnedStocks(json.stocks);
+      })
+      .catch((errorResponse) => {
+        errorResponse.json().then((errorJson: { message: string }) => {
+          console.error(errorJson.message);
+        });
+      });
+  };
+
+  const fetchUserTotalWorth = () => {
+    fetch("http://localhost:3000/api/worth", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${getJwtToken()}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject(response);
+      })
+      .then((json) => {
+        setWorth(json.worth);
       })
       .catch((errorResponse) => {
         errorResponse.json().then((errorJson: { message: string }) => {
@@ -103,14 +128,15 @@ export const TransactionsPage = () => {
       });
 
     fetchUserStocks();
+    fetchUserTotalWorth();
   }, []);
 
+  const [worth, setWorth] = useState<number>(0);
   const [stocks, setStocks] = useState<StockInfo[]>([]);
   const [ownedStocks, setOwnedStocks] = useState<OwnedStock[]>([]);
   const [selectedStock, setSelectedStock] = useState<string>(
     stocks[0]?.symbol ?? ""
   );
-
   useEffect(() => {
     if (!selectedStock && stocks.length) {
       setSelectedStock(stocks[0].symbol);
@@ -141,9 +167,10 @@ export const TransactionsPage = () => {
         lastDayData={lastDayData}
         ownedStocks={ownedStocks}
         fetchUserStocks={fetchUserStocks}
+        fetchUserTotalWorth={fetchUserTotalWorth}
       />
       <OwnedStocksCard ownedStocks={ownedStocks} stocks={stocks} />
-      <TotalGainBox ownedStocks={ownedStocks} stocks={stocks} />
+      <TotalWorth worth={worth} />
     </Flex>
   );
 };

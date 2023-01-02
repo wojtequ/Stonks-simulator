@@ -27,10 +27,9 @@ const getFormatedDate = (date: string) => {
   return parsedDate.toJSON().slice(0, 10);
 };
 
-
 export const Details = () => {
   useEffect(() => {
-    fetch("/api/transactionHistory", {
+    fetch("http://localhost:3000/api/transactionHistory", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${getJwtToken()}`,
@@ -78,7 +77,7 @@ export const Details = () => {
                     ? t("details.table.transaction-sell-cell")
                     : t("details.table.transaction-buy-cell")}
                 </Td>
-                <Td textAlign="center">{transaction.stockCount}</Td>
+                <Td textAlign="center">{transaction.stockCount.toFixed(2)}</Td>
                 <Td textAlign="center">{transaction.stockName}</Td>
                 <Td textAlign="center">
                   {getFormatedDate(transaction.transactionDate)}
