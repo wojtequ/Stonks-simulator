@@ -60,7 +60,6 @@
   "transactions.currently-held-shares.company-name-col": "Jaka firma",
   "transactions.currently-held-shares.actions-col": "Akcje",
   "transactions.currently-held-shares.actual-value-col": "Aktualna wartość",
-  "stock.price": "Cena akcji",
   "current.password": "Aktualne hasło",
   "new.password": "Nowe hasło",
   "profile-confirmation": "Jesteś pewien?",
@@ -72,5 +71,6 @@
   "new.username": "Nowa nazwa użytkownika",
   "profile-change-username": "Zmień nazwę",
   "profile-username-changed": "Nazwa użytkownika została zmieniona",
-  "profile-username-same": "Nowa nazwa użytkownika nie może być taka sama jak aktualna"
+  "profile-username-same": "Nowa nazwa użytkownika nie może być taka sama jak aktualna",
+  "total-worth": "Całkowita wartość akcji"
 }

@@ -484,8 +484,8 @@ app.put("/api/changeUsername", auth, async (req, res) => {
   }
 });
 
-app.get("/api/worth", auth, async(req, res) => {
-  try{
+app.get("/api/worth", auth, async (req, res) => {
+  try {
     const user = await User.findOne({
       userName: req.user.userName,
     });
@@ -495,20 +495,23 @@ app.get("/api/worth", auth, async(req, res) => {
 
     let worth = user.balance;
 
-    for(const i of user.ownedStocks){
-      await axios.get(`https://api.nasdaq.com/api/quote/watchlist?symbol=${i.stockName}%7cstocks`)
-      .then((response) => {
-        worth += i.stockCount*Number(response.data.data[0].lastSalePrice.slice(1));
-      });
+    for (const i of user.ownedStocks) {
+      await axios
+        .get(
+          `https://api.nasdaq.com/api/quote/watchlist?symbol=${i.stockName}%7cstocks`
+        )
+        .then((response) => {
+          worth +=
+            i.stockCount * Number(response.data.data[0].lastSalePrice.slice(1));
+        });
     }
-    console.log(worth);
     return res.json({
       status: "ok",
       worth: worth,
     });
-  }catch(error){
+  } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: "Bad request"})
+    return res.status(400).json({ message: "Bad request" });
   }
 });
 

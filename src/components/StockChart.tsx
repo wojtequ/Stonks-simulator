@@ -48,6 +48,7 @@ type StockChartProps = {
   lastDayData: ChartData[];
   ownedStocks: OwnedStock[];
   fetchUserStocks: VoidFunction;
+  fetchUserTotalWorth: VoidFunction;
 };
 
 export const StockChart: React.FC<StockChartProps> = ({
@@ -56,6 +57,7 @@ export const StockChart: React.FC<StockChartProps> = ({
   lastDayData,
   ownedStocks,
   fetchUserStocks,
+  fetchUserTotalWorth,
 }) => {
   const getOwnedStocks = () =>
     ownedStocks.find((stock) => stock.stockName === selectedStock);
@@ -220,6 +222,7 @@ export const StockChart: React.FC<StockChartProps> = ({
       })
       .then((json) => {
         fetchUserStocks();
+        fetchUserTotalWorth();
         toast({
           title: t("toast.homepage.add.funds.success"),
           status: "success",
@@ -263,6 +266,7 @@ export const StockChart: React.FC<StockChartProps> = ({
       })
       .then((json) => {
         fetchUserStocks();
+        fetchUserTotalWorth();
         toast({
           title: `Stocks sold +$${(
             sliderValue * Number(getActualPriceOfSelectedStock())
