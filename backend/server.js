@@ -484,7 +484,7 @@ app.put("/api/changeUsername", auth, async (req, res) => {
   }
 });
 
-    app.get("/api/worth", auth, async(req, res) => {
+app.get("/api/worth", auth, async(req, res) => {
   try{
     const user = await User.findOne({
       userName: req.user.userName,
@@ -493,7 +493,7 @@ app.put("/api/changeUsername", auth, async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    let worth = 0;
+    let worth = user.balance;
 
     for(const i of user.ownedStocks){
       await axios.get(`https://api.nasdaq.com/api/quote/watchlist?symbol=${i.stockName}%7cstocks`)
