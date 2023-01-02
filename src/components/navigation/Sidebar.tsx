@@ -12,6 +12,7 @@ import {
   Text,
   Spacer,
   Center,
+  Highlight,
 } from "@chakra-ui/react";
 import { BsWallet2 } from "react-icons/bs";
 import { AiOutlineHome } from "react-icons/ai";
@@ -39,7 +40,10 @@ const SidebarContent: React.FC<SideBarContentProps> = ({ onClick }) => (
   <VStack align="">
     <Box mb={16} p={5}>
       <Text fontSize="xl" fontWeight="bold" color="blue.400">
-        <Icon as={BsWallet2} w={10} h={10} /> StonksSimulator
+        <Icon as={BsWallet2} w={10} h={10} />
+        <Highlight query="Simulator" styles={{ py: "1", color: "red" }}>
+          StonksSimulator
+        </Highlight>
       </Text>
     </Box>
     <NavLink
